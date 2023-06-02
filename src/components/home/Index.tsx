@@ -1,5 +1,11 @@
+import Featured from "./featured/Index";
+
 const Home = () => {
-  return <h3>Hello</h3>;
+  return (
+    <>
+      <Featured />
+    </>
+  );
 };
 
 export default Home;
