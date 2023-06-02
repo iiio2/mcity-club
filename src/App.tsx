@@ -4,8 +4,9 @@ import Header from "./components/layouts/Header";
 import Footer from "./components/layouts/Footer";
 import Home from "./components/home/Index";
 import SignIn from "./components/signIn/Index";
+import TheMatches from "./components/theMatches/Index";
 
-function App({ user }:any) {
+function App({ user }: any) {
   return (
     <main>
       <ToastContainer />
@@ -13,6 +14,7 @@ function App({ user }:any) {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sign_in" element={<SignIn user={user} />} />
+        <Route path="/the_matches" element={<TheMatches />} />
       </Routes>
       <Footer />
     </main>
