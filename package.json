@@ -20,6 +20,7 @@
     "react-dom": "^18.2.0",
     "react-firebase-file-uploader": "2.4.4",
     "react-move": "6.4.0",
+    "react-router-dom": "^6.11.2",
     "react-toastify": "7.0.3",
     "yup": "0.32.9"
   },
