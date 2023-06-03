@@ -9,6 +9,7 @@ import TheTeam from "./components/theTeam/Index";
 import Dashboard from "./components/admin/Dashboard";
 import AdminMatches from "./components/admin/matches/Index";
 import MatchForm from "./components/admin/matches/MatchForm";
+import AdminPlayers from "./components/admin/players/Index";
 import NotFound from "./components/notFound";
 
 function App({ user }: any) {
@@ -28,6 +29,7 @@ function App({ user }: any) {
           path="/admin_matches/edit_match/:matchid"
           element={<MatchForm />}
         />
+        <Route path="/admin_players" element={<AdminPlayers />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
