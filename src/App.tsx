@@ -12,12 +12,13 @@ import MatchForm from "./components/admin/matches/MatchForm";
 import AdminPlayers from "./components/admin/players/Index";
 import PlayerForm from "./components/admin/players/PlayerForm";
 import NotFound from "./components/notFound";
+import "react-toastify/dist/ReactToastify.css";
 
 function App({ user }: any) {
   return (
     <main>
       <ToastContainer />
-      <Header />
+      <Header user={user} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sign_in" element={<SignIn user={user} />} />
