@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FormHelperText } from "@material-ui/core";
 import { toast } from "react-toastify";
+import { firebase } from "../services/firebase";
 import mcitylogo from "../resources/images/logos/manchester_city_logo.png";
 
 export const CityLogo = (props: any) => {
@@ -79,4 +80,16 @@ export const selectErrorHelper = (formik: any, values: any) => {
 
 export const selectIsError = (formik: any, values: any) => {
   return formik.errors[values] && formik.touched[values];
+};
+
+export const logoutHandler = () => {
+  firebase
+    .auth()
+    .signOut()
+    .then(() => {
+      showSuccessToast("Goodbye!!");
+    })
+    .catch((error) => {
+      showErrorToast(error.message);
+    });
 };

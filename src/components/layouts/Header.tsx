@@ -1,8 +1,8 @@
 import { AppBar, Toolbar, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { CityLogo } from "../../utils/tools";
+import { CityLogo, logoutHandler } from "../../utils/tools";
 
-const Header = () => {
+const Header = ({ user }: any) => {
   return (
     <AppBar
       position="fixed"
@@ -27,6 +27,17 @@ const Header = () => {
         <Link to="/the_team">
           <Button color="inherit">The team</Button>
         </Link>
+        {user ? (
+          <>
+            <Link to="/dashboard">
+              <Button color="inherit">Dashboard</Button>
+            </Link>
+
+            <Button color="inherit" onClick={logoutHandler}>
+              Log out
+            </Button>
+          </>
+        ) : null}
       </Toolbar>
     </AppBar>
   );
