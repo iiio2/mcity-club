@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FormHelperText } from "@material-ui/core";
 import { toast } from "react-toastify";
 import mcitylogo from "../resources/images/logos/manchester_city_logo.png";
 
@@ -59,4 +60,23 @@ export const Tag = (props: any) => {
   } else {
     return template;
   }
+};
+
+export const textErrorHelper = (formik: any, values: any) => ({
+  error: formik.errors[values] && formik.touched[values],
+  helperText:
+    formik.errors[values] && formik.touched[values]
+      ? formik.errors[values]
+      : null,
+});
+
+export const selectErrorHelper = (formik: any, values: any) => {
+  if (formik.errors[values] && formik.touched[values]) {
+    return <FormHelperText>{formik.errors[values]}</FormHelperText>;
+  }
+  return false;
+};
+
+export const selectIsError = (formik: any, values: any) => {
+  return formik.errors[values] && formik.touched[values];
 };
