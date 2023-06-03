@@ -6,6 +6,7 @@ import Home from "./components/home/Index";
 import SignIn from "./components/signIn/Index";
 import TheMatches from "./components/theMatches/Index";
 import TheTeam from "./components/theTeam/Index";
+import NotFound from "./components/notFound";
 
 function App({ user }: any) {
   return (
@@ -17,6 +18,7 @@ function App({ user }: any) {
         <Route path="/sign_in" element={<SignIn user={user} />} />
         <Route path="/the_matches" element={<TheMatches />} />
         <Route path="/the_team" element={<TheTeam />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </main>
