@@ -11,6 +11,7 @@ import AdminMatches from "./components/admin/matches/Index";
 import MatchForm from "./components/admin/matches/MatchForm";
 import AdminPlayers from "./components/admin/players/Index";
 import PlayerForm from "./components/admin/players/PlayerForm";
+import AuthGuard from "./hoc/AuthGuard";
 import NotFound from "./components/notFound";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -23,19 +24,69 @@ function App({ user }: any) {
         <Route path="/" element={<Home />} />
         <Route path="/sign_in" element={<SignIn user={user} />} />
         <Route path="/the_matches" element={<TheMatches />} />
-        <Route path="/the_team" element={<TheTeam />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/admin_matches" element={<AdminMatches />} />
-        <Route path="/admin_matches/add_match" element={<MatchForm />} />
+        <Route
+          path="/the_team"
+          element={
+            <AuthGuard>
+              <TheTeam />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <AuthGuard>
+              <Dashboard />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/admin_matches"
+          element={
+            <AuthGuard>
+              <AdminMatches />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/admin_matches/add_match"
+          element={
+            <AuthGuard>
+              <MatchForm />
+            </AuthGuard>
+          }
+        />
         <Route
           path="/admin_matches/edit_match/:matchid"
-          element={<MatchForm />}
+          element={
+            <AuthGuard>
+              <MatchForm />
+            </AuthGuard>
+          }
         />
-        <Route path="/admin_players" element={<AdminPlayers />} />
-        <Route path="/admin_players/add_player/" element={<PlayerForm />} />
+        <Route
+          path="/admin_players"
+          element={
+            <AuthGuard>
+              <AdminPlayers />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/admin_players/add_player/"
+          element={
+            <AuthGuard>
+              <PlayerForm />
+            </AuthGuard>
+          }
+        />
         <Route
           path="/admin_players/edit_player/:playerid"
-          element={<PlayerForm />}
+          element={
+            <AuthGuard>
+              <PlayerForm />
+            </AuthGuard>
+          }
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
