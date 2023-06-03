@@ -5,6 +5,7 @@ import Footer from "./components/layouts/Footer";
 import Home from "./components/home/Index";
 import SignIn from "./components/signIn/Index";
 import TheMatches from "./components/theMatches/Index";
+import TheTeam from "./components/theTeam/Index";
 
 function App({ user }: any) {
   return (
@@ -15,6 +16,7 @@ function App({ user }: any) {
         <Route path="/" element={<Home />} />
         <Route path="/sign_in" element={<SignIn user={user} />} />
         <Route path="/the_matches" element={<TheMatches />} />
+        <Route path="/the_team" element={<TheTeam />} />
       </Routes>
       <Footer />
     </main>
