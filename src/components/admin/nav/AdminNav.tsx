@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import ListItem from "@material-ui/core/ListItem";
+import { logoutHandler } from "../../../utils/tools";
 
 const AdminNav = () => {
   const links = [
@@ -22,7 +23,14 @@ const AdminNav = () => {
       </Link>
     ));
 
-  return <>{renderItems()}</>;
+  return (
+    <>
+      {renderItems()}
+      <ListItem button className="admin_nav_link" onClick={logoutHandler}>
+        Log out
+      </ListItem>
+    </>
+  );
 };
 
 export default AdminNav;
