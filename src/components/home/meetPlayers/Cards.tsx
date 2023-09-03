@@ -5,7 +5,7 @@ import Otamendi from "../../../resources/images/players/Otamendi.png";
 import Sterling from "../../../resources/images/players/Raheem_Sterling.png";
 import Kompany from "../../../resources/images/players/Vincent_Kompany.png";
 
-let cards = [
+const cards = [
   {
     bottom: 90,
     left: 300,

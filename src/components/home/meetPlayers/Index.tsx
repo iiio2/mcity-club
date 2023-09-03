@@ -3,7 +3,7 @@ import { Tag } from "../../../utils/tools";
 import { Fade } from "react-awesome-reveal";
 import HomeCards from "./Cards";
 
-let tagDefault = {
+const tagDefault = {
   bck: "#0e1731",
   size: "100px",
   color: "#ffffff",

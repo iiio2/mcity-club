@@ -78,7 +78,7 @@ const MatchForm = () => {
       : null;
 
   const submitForm = (values: any) => {
-    let dataToSubmit = values;
+    const dataToSubmit = values;
 
     teams &&
       teams.forEach((team) => {

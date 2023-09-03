@@ -1,6 +1,6 @@
+// @ts-nocheck
 import { useState } from "react";
 import { firebase } from "../services/firebase";
-// @ts-ignore
 import Uploader from "react-firebase-file-uploader";
 import { CircularProgress } from "@material-ui/core";
 

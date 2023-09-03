@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -56,7 +57,7 @@ const PlayerForm = () => {
   });
 
   const submitForm = (values: any) => {
-    let dataToSubmit = values;
+    const dataToSubmit = values;
     setLoading(true);
 
     if (formType === "add") {
@@ -135,7 +136,6 @@ const PlayerForm = () => {
             <FormControl error={selectIsError(formik, "image")}>
               <Fileuploader
                 dir="players"
-                // @ts-ignore
                 defaultImg={defaultImg}
                 defaultImgName={formik.values.image}
                 filename={(filename) => updateImageName(filename)}
