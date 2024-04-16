@@ -12,6 +12,8 @@ COPY package.json .
 
 COPY pnpm-lock.yaml . 
 
+COPY patches ./patches
+
 RUN pnpm i --frozen-lockfile --ignore-scripts
 
 COPY . .
@@ -20,4 +22,4 @@ RUN pnpm i --frozen-lockfile
 
 EXPOSE 5000 
 
-CMD ["pnpm","run","dev"]
+CMD ["pnpm", "dev"]
