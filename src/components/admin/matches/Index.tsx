@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Button,
   Table,
@@ -9,138 +9,145 @@ import {
   TableRow,
   Paper,
   CircularProgress,
-} from "@material-ui/core";
-import { matchesCollection } from "../../../services/firebase";
-import AdminLayout from "../../../hoc/AdminLayout";
-import { showErrorToast } from "../../../utils/tools";
+} from '@material-ui/core'
+import { Helmet } from 'react-helmet-async'
+import { matchesCollection } from '../../../services/firebase'
+import AdminLayout from '../../../hoc/AdminLayout'
+import { showErrorToast } from '../../../utils/tools'
 
 const AdminMatches = () => {
-  const [lastVisible, setLastVisible] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [matches, setMatches] = useState<any[] | null>(null);
+  const [lastVisible, setLastVisible] = useState<any>(null)
+  const [loading, setLoading] = useState(false)
+  const [matches, setMatches] = useState<any[] | null>(null)
 
   useEffect(() => {
     if (!matches) {
-      setLoading(true);
+      setLoading(true)
       matchesCollection
         .limit(2)
         .get()
         .then((snapshot) => {
-          const lastVisible = snapshot.docs[snapshot.docs.length - 1];
+          const lastVisible = snapshot.docs[snapshot.docs.length - 1]
           const matches = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
-          }));
-          setLastVisible(lastVisible);
-          setMatches(matches);
+          }))
+          setLastVisible(lastVisible)
+          setMatches(matches)
         })
         .catch((error) => {
-          showErrorToast(error);
+          showErrorToast(error)
         })
         .finally(() => {
-          setLoading(false);
-        });
+          setLoading(false)
+        })
     }
-  }, [matches]);
+  }, [matches])
 
   const loadMoreMatches = () => {
     if (lastVisible) {
-      setLoading(true);
+      setLoading(true)
       matchesCollection
         .startAfter(lastVisible)
         .limit(2)
         .get()
         .then((snapshot) => {
-          const lastVisible = snapshot.docs[snapshot.docs.length - 1];
+          const lastVisible = snapshot.docs[snapshot.docs.length - 1]
           const newMatches = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
-          }));
+          }))
 
-          setLastVisible(lastVisible);
+          setLastVisible(lastVisible)
           if (matches) {
-            setMatches([...matches, ...newMatches]);
+            setMatches([...matches, ...newMatches])
           }
         })
         .catch((error) => {
-          showErrorToast(error);
+          showErrorToast(error)
         })
         .finally(() => {
-          setLoading(false);
-        });
+          setLoading(false)
+        })
     } else {
-      showErrorToast("nothing to load");
+      showErrorToast('nothing to load')
     }
-  };
+  }
 
   return (
-    <AdminLayout title="The matches">
-      <div className="mb-5">
+    <>
+      <Helmet>
+        <title>MCity Club - Dashboard for Matches</title>
+      </Helmet>
+      <AdminLayout title="The matches">
+        <div className="mb-5">
+          <Button
+            disableElevation
+            variant="outlined"
+            component={Link}
+            to={'/admin_matches/add_match'}
+          >
+            Add match
+          </Button>
+        </div>
+
+        <Paper className="mb-5">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Date</TableCell>
+                <TableCell>Match</TableCell>
+                <TableCell>Result</TableCell>
+                <TableCell>Final</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {matches
+                ? matches.map((match) => (
+                    <TableRow key={match.id}>
+                      <TableCell>{match.date}</TableCell>
+                      <TableCell>
+                        <Link to={`/admin_matches/edit_match/${match.id}`}>
+                          {match.away} <strong>-</strong> {match.local}
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        {match.resultAway} <strong>-</strong>{' '}
+                        {match.resultLocal}
+                      </TableCell>
+                      <TableCell>
+                        {match.final === 'Yes' ? (
+                          <span className="matches_tag_red">Final</span>
+                        ) : (
+                          <span className="matches_tag_green">
+                            Not played yet
+                          </span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : null}
+            </TableBody>
+          </Table>
+        </Paper>
+
         <Button
-          disableElevation
-          variant="outlined"
-          component={Link}
-          to={"/admin_matches/add_match"}
+          variant="contained"
+          color="primary"
+          onClick={() => loadMoreMatches()}
+          disabled={loading}
         >
-          Add match
+          Load more
         </Button>
-      </div>
 
-      <Paper className="mb-5">
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Match</TableCell>
-              <TableCell>Result</TableCell>
-              <TableCell>Final</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {matches
-              ? matches.map((match) => (
-                  <TableRow key={match.id}>
-                    <TableCell>{match.date}</TableCell>
-                    <TableCell>
-                      <Link to={`/admin_matches/edit_match/${match.id}`}>
-                        {match.away} <strong>-</strong> {match.local}
-                      </Link>
-                    </TableCell>
-                    <TableCell>
-                      {match.resultAway} <strong>-</strong> {match.resultLocal}
-                    </TableCell>
-                    <TableCell>
-                      {match.final === "Yes" ? (
-                        <span className="matches_tag_red">Final</span>
-                      ) : (
-                        <span className="matches_tag_green">
-                          Not played yet
-                        </span>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))
-              : null}
-          </TableBody>
-        </Table>
-      </Paper>
+        <div className="admin_progress">
+          {loading ? (
+            <CircularProgress thickness={7} style={{ color: '#98c5e9' }} />
+          ) : null}
+        </div>
+      </AdminLayout>
+    </>
+  )
+}
 
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => loadMoreMatches()}
-        disabled={loading}
-      >
-        Load more
-      </Button>
-
-      <div className="admin_progress">
-        {loading ? (
-          <CircularProgress thickness={7} style={{ color: "#98c5e9" }} />
-        ) : null}
-      </div>
-    </AdminLayout>
-  );
-};
-
-export default AdminMatches;
+export default AdminMatches

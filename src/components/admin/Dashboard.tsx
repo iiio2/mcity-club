@@ -1,13 +1,19 @@
-import AdminLayout from "../../hoc/AdminLayout";
+import { Helmet } from 'react-helmet-async'
+import AdminLayout from '../../hoc/AdminLayout'
 
 const Dashboard = () => {
   return (
-    <AdminLayout>
-      <div className="user_dashboard">
-        <div>This is your dashboard</div>
-      </div>
-    </AdminLayout>
-  );
-};
+    <>
+      <Helmet>
+        <title>MCity Club - Dashboard</title>
+      </Helmet>
+      <AdminLayout>
+        <div className="user_dashboard">
+          <div>This is your dashboard</div>
+        </div>
+      </AdminLayout>
+    </>
+  )
+}
 
-export default Dashboard;
+export default Dashboard

@@ -1,23 +1,24 @@
-import { useEffect, useState } from "react";
-import { Slide } from "react-awesome-reveal";
-import { CircularProgress } from "@material-ui/core";
-import { firebase, playersCollection } from "../../services/firebase";
-import PlayerCard from "../../utils/playCard";
-import { showErrorToast } from "../../utils/tools";
+import { useEffect, useState } from 'react'
+import { Slide } from 'react-awesome-reveal'
+import { CircularProgress } from '@material-ui/core'
+import { Helmet } from 'react-helmet-async'
+import { firebase, playersCollection } from '../../services/firebase'
+import PlayerCard from '../../utils/playCard'
+import { showErrorToast } from '../../utils/tools'
 
 interface Player {
-  id: string;
-  name: string;
-  lastname: string;
-  image: string;
-  number: number;
-  position: string;
-  url: string;
+  id: string
+  name: string
+  lastname: string
+  image: string
+  number: number
+  position: string
+  url: string
 }
 
 const TheTeam = () => {
-  const [loading, setLoading] = useState(true);
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [loading, setLoading] = useState(true)
+  const [players, setPlayers] = useState<Player[]>([])
 
   useEffect(() => {
     if (players.length === 0) {
@@ -27,37 +28,37 @@ const TheTeam = () => {
           const playersData: any[] = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
-          }));
+          }))
 
           const fetchPlayerUrls = playersData.map((player) =>
             firebase
               .storage()
-              .ref("players")
+              .ref('players')
               .child(player.image)
               .getDownloadURL()
               .then((url) => ({ ...player, url }))
               .catch(() => null)
-          );
+          )
 
           Promise.all(fetchPlayerUrls)
             .then((playersWithUrls) => {
-              setPlayers(playersWithUrls.filter(Boolean) as Player[]);
+              setPlayers(playersWithUrls.filter(Boolean) as Player[])
             })
             .catch(() => {
-              showErrorToast("Sorry, try again later");
+              showErrorToast('Sorry, try again later')
             })
             .finally(() => {
-              setLoading(false);
-            });
+              setLoading(false)
+            })
         })
         .catch(() => {
-          showErrorToast("Sorry, try again later");
-        });
+          showErrorToast('Sorry, try again later')
+        })
     }
-  }, [players.length]);
+  }, [players.length])
 
   const showPlayerByCategory = (category: string) => {
-    if (players.length === 0) return null;
+    if (players.length === 0) return null
 
     return players.map((player) =>
       player.position === category ? (
@@ -72,40 +73,51 @@ const TheTeam = () => {
           </div>
         </Slide>
       ) : null
-    );
-  };
+    )
+  }
 
   return (
-    <div className="the_team_container">
-      {loading ? (
-        <div className="progress">
-          <CircularProgress />
-        </div>
-      ) : (
-        <div>
-          <div className="team_category_wrapper">
-            <div className="title">Keepers</div>
-            <div className="team_cards">{showPlayerByCategory("Keeper")}</div>
+    <>
+      <Helmet>
+        <title>MCity Club - Team</title>
+      </Helmet>
+      <div className="the_team_container">
+        {loading ? (
+          <div className="progress">
+            <CircularProgress />
           </div>
+        ) : (
+          <div>
+            <div className="team_category_wrapper">
+              <div className="title">Keepers</div>
+              <div className="team_cards">{showPlayerByCategory('Keeper')}</div>
+            </div>
 
-          <div className="team_category_wrapper">
-            <div className="title">Defence</div>
-            <div className="team_cards">{showPlayerByCategory("Defence")}</div>
+            <div className="team_category_wrapper">
+              <div className="title">Defence</div>
+              <div className="team_cards">
+                {showPlayerByCategory('Defence')}
+              </div>
+            </div>
+
+            <div className="team_category_wrapper">
+              <div className="title">Midfield</div>
+              <div className="team_cards">
+                {showPlayerByCategory('Midfield')}
+              </div>
+            </div>
+
+            <div className="team_category_wrapper">
+              <div className="title">Strikers</div>
+              <div className="team_cards">
+                {showPlayerByCategory('Striker')}
+              </div>
+            </div>
           </div>
+        )}
+      </div>
+    </>
+  )
+}
 
-          <div className="team_category_wrapper">
-            <div className="title">Midfield</div>
-            <div className="team_cards">{showPlayerByCategory("Midfield")}</div>
-          </div>
-
-          <div className="team_category_wrapper">
-            <div className="title">Strikers</div>
-            <div className="team_cards">{showPlayerByCategory("Striker")}</div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default TheTeam;
+export default TheTeam

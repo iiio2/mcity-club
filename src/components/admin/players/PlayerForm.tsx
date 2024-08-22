@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import {
   TextField,
   Select,
@@ -128,92 +129,97 @@ const PlayerForm = () => {
   }
 
   return (
-    <AdminLayout title={formType === 'add' ? 'Add player' : 'Edit player'}>
-      <div className="editplayers_dialog_wrapper">
-        <div>
-          <form onSubmit={formik.handleSubmit}>
-            <FormControl error={selectIsError(formik, 'image')}>
-              <Fileuploader
-                dir="players"
-                defaultImg={defaultImg}
-                defaultImgName={formik.values.image}
-                filename={(filename) => updateImageName(filename)}
-                resetImage={() => resetImage()}
-              />
-              {selectErrorHelper(formik, 'image')}
-            </FormControl>
-
-            <hr />
-            <h4>Player info</h4>
-            <div className="mb-5">
-              <FormControl>
-                <TextField
-                  id="name"
-                  variant="outlined"
-                  placeholder="Add firstname"
-                  {...formik.getFieldProps('name')}
-                  {...textErrorHelper(formik, 'name')}
+    <>
+      <Helmet>
+        <title>MCity Club - {playerid ? 'Edit Player' : 'Add Player'}</title>
+      </Helmet>
+      <AdminLayout title={formType === 'add' ? 'Add player' : 'Edit player'}>
+        <div className="editplayers_dialog_wrapper">
+          <div>
+            <form onSubmit={formik.handleSubmit}>
+              <FormControl error={selectIsError(formik, 'image')}>
+                <Fileuploader
+                  dir="players"
+                  defaultImg={defaultImg}
+                  defaultImgName={formik.values.image}
+                  filename={(filename) => updateImageName(filename)}
+                  resetImage={() => resetImage()}
                 />
+                {selectErrorHelper(formik, 'image')}
               </FormControl>
-            </div>
 
-            <div className="mb-5">
-              <FormControl>
-                <TextField
-                  id="lastname"
-                  variant="outlined"
-                  placeholder="Add lastname"
-                  {...formik.getFieldProps('lastname')}
-                  {...textErrorHelper(formik, 'lastname')}
-                />
-              </FormControl>
-            </div>
+              <hr />
+              <h4>Player info</h4>
+              <div className="mb-5">
+                <FormControl>
+                  <TextField
+                    id="name"
+                    variant="outlined"
+                    placeholder="Add firstname"
+                    {...formik.getFieldProps('name')}
+                    {...textErrorHelper(formik, 'name')}
+                  />
+                </FormControl>
+              </div>
 
-            <div className="mb-5">
-              <FormControl>
-                <TextField
-                  type="number"
-                  id="number"
-                  variant="outlined"
-                  placeholder="Add number"
-                  {...formik.getFieldProps('number')}
-                  {...textErrorHelper(formik, 'number')}
-                />
-              </FormControl>
-            </div>
+              <div className="mb-5">
+                <FormControl>
+                  <TextField
+                    id="lastname"
+                    variant="outlined"
+                    placeholder="Add lastname"
+                    {...formik.getFieldProps('lastname')}
+                    {...textErrorHelper(formik, 'lastname')}
+                  />
+                </FormControl>
+              </div>
 
-            <div className="mb-5">
-              <FormControl error={selectIsError(formik, 'position')}>
-                <Select
-                  id="position"
-                  variant="outlined"
-                  displayEmpty
-                  {...formik.getFieldProps('position')}
-                >
-                  <MenuItem value="" disabled>
-                    Select a position
-                  </MenuItem>
-                  <MenuItem value="Keeper">Keeper</MenuItem>
-                  <MenuItem value="Defence">Defence</MenuItem>
-                  <MenuItem value="Midfield">Midfield</MenuItem>
-                  <MenuItem value="Striker">Striker</MenuItem>
-                </Select>
-                {selectErrorHelper(formik, 'position')}
-              </FormControl>
-            </div>
+              <div className="mb-5">
+                <FormControl>
+                  <TextField
+                    type="number"
+                    id="number"
+                    variant="outlined"
+                    placeholder="Add number"
+                    {...formik.getFieldProps('number')}
+                    {...textErrorHelper(formik, 'number')}
+                  />
+                </FormControl>
+              </div>
 
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={loading}
-            >
-              {formType === 'add' ? 'Add player' : 'Edit player'}
-            </Button>
-          </form>
+              <div className="mb-5">
+                <FormControl error={selectIsError(formik, 'position')}>
+                  <Select
+                    id="position"
+                    variant="outlined"
+                    displayEmpty
+                    {...formik.getFieldProps('position')}
+                  >
+                    <MenuItem value="" disabled>
+                      Select a position
+                    </MenuItem>
+                    <MenuItem value="Keeper">Keeper</MenuItem>
+                    <MenuItem value="Defence">Defence</MenuItem>
+                    <MenuItem value="Midfield">Midfield</MenuItem>
+                    <MenuItem value="Striker">Striker</MenuItem>
+                  </Select>
+                  {selectErrorHelper(formik, 'position')}
+                </FormControl>
+              </div>
+
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={loading}
+              >
+                {formType === 'add' ? 'Add player' : 'Edit player'}
+              </Button>
+            </form>
+          </div>
         </div>
-      </div>
-    </AdminLayout>
+      </AdminLayout>
+    </>
   )
 }
 

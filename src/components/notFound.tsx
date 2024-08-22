@@ -1,10 +1,17 @@
+import { Helmet } from 'react-helmet-async'
+
 const NotFound = () => {
   return (
-    <div className="not_found_container">
-      <div>Sorry :(</div>
-      <div>Page not found</div>
-    </div>
-  );
-};
+    <>
+      <Helmet>
+        <title>MCity Club - Not Found</title>
+      </Helmet>
+      <div className="not_found_container">
+        <div>Sorry :(</div>
+        <div>Page not found</div>
+      </div>
+    </>
+  )
+}
 
-export default NotFound;
+export default NotFound

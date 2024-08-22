@@ -1,51 +1,55 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { firebase } from "../../services/firebase"
-import { CircularProgress } from "@material-ui/core";
-import { Navigate } from "react-router-dom";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { showErrorToast, showSuccessToast } from "../../utils/tools";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { firebase } from '../../services/firebase'
+import { CircularProgress } from '@material-ui/core'
+import { Navigate } from 'react-router-dom'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { Helmet } from 'react-helmet-async'
+import { showErrorToast, showSuccessToast } from '../../utils/tools'
 
 const SignIn = ({ user }: any) => {
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
   const formik = useFormik({
     initialValues: {
-      email: "francis@gmail.com",
-      password: "testing123",
+      email: 'francis@gmail.com',
+      password: 'testing123',
     },
     validationSchema: Yup.object({
       email: Yup.string()
-        .email("Invalid email address")
-        .required("The email is required"),
-      password: Yup.string().required("The password is required"),
+        .email('Invalid email address')
+        .required('The email is required'),
+      password: Yup.string().required('The password is required'),
     }),
     onSubmit: (values) => {
-      setLoading(true);
-      submitForm(values);
+      setLoading(true)
+      submitForm(values)
     },
-  });
+  })
 
   const submitForm = (values: any) => {
     firebase
       .auth()
       .signInWithEmailAndPassword(values.email, values.password)
       .then(() => {
-        showSuccessToast("Welcome back !!");
-        navigate("/dashboard");
+        showSuccessToast('Welcome back !!')
+        navigate('/dashboard')
       })
       .catch((error) => {
-        setLoading(false);
-        showErrorToast(error.message);
-      });
-  };
+        setLoading(false)
+        showErrorToast(error.message)
+      })
+  }
 
   return (
     <>
+      <Helmet>
+        <title>MCity Club - Sign In</title>
+      </Helmet>
       {!user ? (
         <div className="container">
-          <div className="signin_wrapper" style={{ margin: "100px" }}>
+          <div className="signin_wrapper" style={{ margin: '100px' }}>
             <form onSubmit={formik.handleSubmit}>
               <h2>Please login</h2>
               <input
@@ -83,7 +87,7 @@ const SignIn = ({ user }: any) => {
         <Navigate to="/dashboard" />
       )}
     </>
-  );
-};
+  )
+}
 
-export default SignIn;
+export default SignIn

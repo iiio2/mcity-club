@@ -1,22 +1,23 @@
-import { useEffect, useReducer, useState } from "react";
-import { CircularProgress } from "@material-ui/core";
-import LeagueTable from "./Tables";
-import MatchesList from "./MatchesList";
-import { showErrorToast } from "../../utils/tools";
-import { matchesCollection } from "../../services/firebase";
+import { useEffect, useReducer, useState } from 'react'
+import { CircularProgress } from '@material-ui/core'
+import { Helmet } from 'react-helmet-async'
+import LeagueTable from './Tables'
+import MatchesList from './MatchesList'
+import { showErrorToast } from '../../utils/tools'
+import { matchesCollection } from '../../services/firebase'
 
 const TheMatches = () => {
-  const [matches, setMatches] = useState<any[] | null>(null);
+  const [matches, setMatches] = useState<any[] | null>(null)
   const [state, dispatch] = useReducer(
     (prevState: any, nextState: any) => {
-      return { ...prevState, ...nextState };
+      return { ...prevState, ...nextState }
     },
     {
       filterMatches: null,
-      playedFilter: "All",
-      resultFilter: "All",
+      playedFilter: 'All',
+      resultFilter: 'All',
     }
-  );
+  )
 
   useEffect(() => {
     if (!matches) {
@@ -26,46 +27,49 @@ const TheMatches = () => {
           const matches = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
-          }));
-          setMatches(matches);
-          dispatch({ ...state, filterMatches: matches });
+          }))
+          setMatches(matches)
+          dispatch({ ...state, filterMatches: matches })
         })
         .catch((error) => {
-          showErrorToast(error);
-        });
+          showErrorToast(error)
+        })
     }
-  }, [matches, state]);
+  }, [matches, state])
 
   const showPlayed = (played: any) => {
     if (matches) {
       const list = matches.filter((match) => {
-        return match.final === played;
-      });
+        return match.final === played
+      })
       dispatch({
         ...state,
-        filterMatches: played === "All" ? matches : list,
+        filterMatches: played === 'All' ? matches : list,
         playedFilter: played,
-        resultFilter: "All",
-      });
+        resultFilter: 'All',
+      })
     }
-  };
+  }
 
   const showResult = (result: any) => {
     if (matches) {
       const list = matches.filter((match) => {
-        return match.result === result;
-      });
+        return match.result === result
+      })
 
       dispatch({
         ...state,
-        filterMatches: result === "All" ? matches : list,
-        playedFilter: "All",
+        filterMatches: result === 'All' ? matches : list,
+        playedFilter: 'All',
         resultFilter: result,
-      });
+      })
     }
-  };
+  }
   return (
     <>
+      <Helmet>
+        <title>MCity Club - Matches</title>
+      </Helmet>
       {matches ? (
         <div className="the_matches_container">
           <div className="the_matches_wrapper">
@@ -76,25 +80,25 @@ const TheMatches = () => {
                   <div className="cont">
                     <div
                       className={`option ${
-                        state.playedFilter === "All" ? "active" : ""
+                        state.playedFilter === 'All' ? 'active' : ''
                       }`}
-                      onClick={() => showPlayed("All")}
+                      onClick={() => showPlayed('All')}
                     >
                       All
                     </div>
                     <div
                       className={`option ${
-                        state.playedFilter === "yes" ? "active" : ""
+                        state.playedFilter === 'yes' ? 'active' : ''
                       }`}
-                      onClick={() => showPlayed("yes")}
+                      onClick={() => showPlayed('yes')}
                     >
                       Played
                     </div>
                     <div
                       className={`option ${
-                        state.playedFilter === "no" ? "active" : ""
+                        state.playedFilter === 'no' ? 'active' : ''
                       }`}
-                      onClick={() => showPlayed("no")}
+                      onClick={() => showPlayed('no')}
                     >
                       Not Played
                     </div>
@@ -105,33 +109,33 @@ const TheMatches = () => {
                   <div className="cont">
                     <div
                       className={`option ${
-                        state.resultFilter === "All" ? "active" : ""
+                        state.resultFilter === 'All' ? 'active' : ''
                       }`}
-                      onClick={() => showResult("All")}
+                      onClick={() => showResult('All')}
                     >
                       All
                     </div>
                     <div
                       className={`option ${
-                        state.resultFilter === "W" ? "active" : ""
+                        state.resultFilter === 'W' ? 'active' : ''
                       }`}
-                      onClick={() => showResult("W")}
+                      onClick={() => showResult('W')}
                     >
                       W
                     </div>
                     <div
                       className={`option ${
-                        state.resultFilter === "L" ? "active" : ""
+                        state.resultFilter === 'L' ? 'active' : ''
                       }`}
-                      onClick={() => showResult("L")}
+                      onClick={() => showResult('L')}
                     >
                       L
                     </div>
                     <div
                       className={`option ${
-                        state.resultFilter === "D" ? "active" : ""
+                        state.resultFilter === 'D' ? 'active' : ''
                       }`}
-                      onClick={() => showResult("D")}
+                      onClick={() => showResult('D')}
                     >
                       D
                     </div>
@@ -151,7 +155,7 @@ const TheMatches = () => {
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
-export default TheMatches;
+export default TheMatches
