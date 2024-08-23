@@ -78,7 +78,14 @@ const SignIn = ({ user }: any) => {
               {loading ? (
                 <CircularProgress color="secondary" className="progress" />
               ) : (
-                <button type="submit">Log in</button>
+                <button
+                  style={{
+                    cursor: 'pointer',
+                  }}
+                  type="submit"
+                >
+                  Log in
+                </button>
               )}
             </form>
           </div>

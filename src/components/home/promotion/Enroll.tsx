@@ -1,46 +1,46 @@
-import { useState } from "react";
-import { Fade } from "react-awesome-reveal";
-import { CircularProgress } from "@material-ui/core";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { promotionsCollection } from "../../../services/firebase";
-import { showErrorToast, showSuccessToast } from "../../../utils/tools";
+import { useState } from 'react'
+import { Fade } from 'react-awesome-reveal'
+import { CircularProgress } from '@material-ui/core'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { promotionsCollection } from '../../../services/firebase'
+import { showErrorToast, showSuccessToast } from '../../../utils/tools'
 
 const Enroll = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const formik = useFormik({
-    initialValues: { email: "" },
+    initialValues: { email: '' },
     validationSchema: Yup.object({
       email: Yup.string()
-        .email("Invalid email")
-        .required("The email is required"),
+        .email('Invalid email')
+        .required('The email is required'),
     }),
     onSubmit: (values) => {
-      setLoading(true);
-      submitForm(values);
+      setLoading(true)
+      submitForm(values)
     },
-  });
+  })
 
   const submitForm = async (values: any) => {
     try {
       const isOnTheList = await promotionsCollection
-        .where("email", "==", values.email)
-        .get();
+        .where('email', '==', values.email)
+        .get()
 
       if (isOnTheList.docs.length >= 1) {
-        showErrorToast("sorry you are on the list already");
-        setLoading(false);
-        return false;
+        showErrorToast('sorry you are on the list already')
+        setLoading(false)
+        return false
       }
-      await promotionsCollection.add({ email: values.email });
-      formik.resetForm();
-      setLoading(false);
-      showSuccessToast("Congratulation !!!:)");
+      await promotionsCollection.add({ email: values.email })
+      formik.resetForm()
+      setLoading(false)
+      showSuccessToast('Congratulation !!!:)')
     } catch (error) {
-      if (error instanceof Error) showErrorToast(error.message);
+      if (error instanceof Error) showErrorToast(error.message)
     }
-  };
+  }
 
   return (
     <Fade>
@@ -63,7 +63,14 @@ const Enroll = () => {
             {loading ? (
               <CircularProgress color="secondary" className="progress" />
             ) : (
-              <button type="submit">Enroll</button>
+              <button
+                style={{
+                  cursor: 'pointer',
+                }}
+                type="submit"
+              >
+                Enroll
+              </button>
             )}
 
             <div className="enroll_discl">
@@ -74,7 +81,7 @@ const Enroll = () => {
         </form>
       </div>
     </Fade>
-  );
-};
+  )
+}
 
-export default Enroll;
+export default Enroll
