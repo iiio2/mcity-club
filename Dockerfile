@@ -1,4 +1,4 @@
-FROM node:18.12-alpine 
+FROM FROM docker.io/library/node:lts-alpine
 
 WORKDIR app/ 
 
