@@ -42,5 +42,6 @@
     "patchedDependencies": {
       "react-awesome-reveal@3.7.0": "patches/react-awesome-reveal@3.7.0.patch"
     }
-  }
+  },
+  "packageManager": "pnpm@9.12.2"
 }
