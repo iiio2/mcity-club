@@ -22,6 +22,9 @@ importers:
       d3-ease:
         specifier: 2.0.0
         version: 2.0.0
+      devalue:
+        specifier: ^5.1.1
+        version: 5.1.1
       firebase:
         specifier: 8.2.9
         version: 8.2.9
@@ -1244,6 +1247,9 @@ packages:
   dequal@2.0.3:
     resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
     engines: {node: '>=6'}
+
+  devalue@5.1.1:
+    resolution: {integrity: sha512-maua5KUiapvEwiEAe+XnlZ3Rh0GD+qI1J/nb9vrJc3muPXvcF/8gXYTWF76+5DAqHyDUtOIImEuo0YKE9mshVw==}
 
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
@@ -3851,6 +3857,8 @@ snapshots:
   deepmerge@2.2.1: {}
 
   dequal@2.0.3: {}
+
+  devalue@5.1.1: {}
 
   devlop@1.1.0:
     dependencies:
