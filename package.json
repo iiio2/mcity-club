@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.0",
   "private": true,
-  "packageManager": "pnpm@9.13.2",
+  "packageManager": "pnpm@9.14.4",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -29,20 +29,20 @@
     "yup": "0.32.9"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^3.9.1",
+    "@antfu/eslint-config": "^3.11.2",
     "@types/d3-ease": "2.0.4",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@typescript-eslint/eslint-plugin": "^8.14.0",
-    "@typescript-eslint/parser": "^8.14.0",
-    "@vitejs/plugin-react": "^4.3.3",
-    "eslint": "^9.14.0",
+    "@typescript-eslint/eslint-plugin": "^8.16.0",
+    "@typescript-eslint/parser": "^8.16.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.16.0",
     "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.14",
+    "eslint-plugin-react-refresh": "^0.4.16",
     "lint-staged": "^15.2.10",
     "simple-git-hooks": "^2.11.1",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.11"
+    "typescript": "^5.7.2",
+    "vite": "^6.0.2"
   },
   "pnpm": {
     "patchedDependencies": {
