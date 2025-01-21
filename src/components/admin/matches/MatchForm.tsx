@@ -1,23 +1,23 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { Helmet } from 'react-helmet-async'
 import {
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
   Button,
+  FormControl,
+  MenuItem,
+  Select,
+  TextField,
 } from '@material-ui/core'
 import { useFormik } from 'formik'
+import { useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
+import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { matchesCollection, teamsCollection } from '../../../services/firebase'
 import AdminLayout from '../../../hoc/AdminLayout'
+import { matchesCollection, teamsCollection } from '../../../services/firebase'
 import {
+  selectErrorHelper,
+  selectIsError,
   showErrorToast,
   showSuccessToast,
   textErrorHelper,
-  selectErrorHelper,
-  selectIsError,
 } from '../../../utils/tools'
 
 const defaultValues = {
@@ -32,7 +32,7 @@ const defaultValues = {
   final: '',
 }
 
-const MatchForm = () => {
+function MatchForm() {
   const [loading, setLoading] = useState(false)
   const [formType, setFormType] = useState('')
   const [teams, setTeams] = useState<any[] | null>(null)
@@ -71,25 +71,25 @@ const MatchForm = () => {
 
   const showTeams = () =>
     teams
-      ? teams.map((item) => (
+      ? teams.map(item => (
           <MenuItem key={item.id} value={item.shortName}>
             {item.shortName}
           </MenuItem>
         ))
       : null
 
-  const submitForm = (values: any) => {
-    let dataToSubmit = values
+  function submitForm(values: any) {
+    const dataToSubmit = values
 
-    teams &&
-      teams.forEach((team) => {
-        if (team.shortName === dataToSubmit.local) {
-          dataToSubmit['localThmb'] = team.thmb
-        }
-        if (team.shortName === dataToSubmit.away) {
-          dataToSubmit['awayThmb'] = team.thmb
-        }
-      })
+    teams
+    && teams.forEach((team) => {
+      if (team.shortName === dataToSubmit.local) {
+        dataToSubmit.localThmb = team.thmb
+      }
+      if (team.shortName === dataToSubmit.away) {
+        dataToSubmit.awayThmb = team.thmb
+      }
+    })
 
     setLoading(true)
     if (formType === 'add') {
@@ -105,7 +105,8 @@ const MatchForm = () => {
         .finally(() => {
           setLoading(false)
         })
-    } else {
+    }
+    else {
       matchesCollection
         .doc(matchid)
         .update(dataToSubmit)
@@ -126,7 +127,7 @@ const MatchForm = () => {
       teamsCollection
         .get()
         .then((snapshot) => {
-          const teams = snapshot.docs.map((doc) => ({
+          const teams = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
           }))
@@ -147,11 +148,13 @@ const MatchForm = () => {
           if (snapshot.data()) {
             setFormType('edit')
             setValues(snapshot.data() as any)
-          } else {
+          }
+          else {
             showErrorToast('No records found')
           }
         })
-    } else {
+    }
+    else {
       setFormType('add')
       setValues(defaultValues)
     }
@@ -160,7 +163,10 @@ const MatchForm = () => {
   return (
     <>
       <Helmet>
-        <title>MCity Club - {matchid ? 'Edit Match' : 'Add Match'}</title>
+        <title>
+          MCity Club -
+          {matchid ? 'Edit Match' : 'Add Match'}
+        </title>
       </Helmet>
       <AdminLayout title={formType === 'add' ? 'Add match' : 'Edit match'}>
         <div className="editmatch_dialog_wrapper">
@@ -171,7 +177,7 @@ const MatchForm = () => {
                 <FormControl>
                   <TextField
                     id="date"
-                    //name="date"
+                    // name="date"
                     type="date"
                     variant="outlined"
                     {...formik.getFieldProps('date')}

@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { Fade } from 'react-awesome-reveal'
 import { CircularProgress } from '@material-ui/core'
 import { useFormik } from 'formik'
+import { useState } from 'react'
+import { Fade } from 'react-awesome-reveal'
 import * as Yup from 'yup'
 import { promotionsCollection } from '../../../services/firebase'
 import { showErrorToast, showSuccessToast } from '../../../utils/tools'
 
-const Enroll = () => {
+function Enroll() {
   const [loading, setLoading] = useState(false)
 
   const formik = useFormik({
@@ -37,8 +37,10 @@ const Enroll = () => {
       formik.resetForm()
       setLoading(false)
       showSuccessToast('Congratulation !!!:)')
-    } catch (error) {
-      if (error instanceof Error) showErrorToast(error.message)
+    }
+    catch (error) {
+      if (error instanceof Error)
+        showErrorToast(error.message)
     }
   }
 
@@ -56,22 +58,26 @@ const Enroll = () => {
               placeholder="Enter your email"
             />
 
-            {formik.touched.email && formik.errors.email ? (
-              <div className="error_label">{formik.errors.email}</div>
-            ) : null}
+            {formik.touched.email && formik.errors.email
+              ? (
+                  <div className="error_label">{formik.errors.email}</div>
+                )
+              : null}
 
-            {loading ? (
-              <CircularProgress color="secondary" className="progress" />
-            ) : (
-              <button
-                style={{
-                  cursor: 'pointer',
-                }}
-                type="submit"
-              >
-                Enroll
-              </button>
-            )}
+            {loading
+              ? (
+                  <CircularProgress color="secondary" className="progress" />
+                )
+              : (
+                  <button
+                    style={{
+                      cursor: 'pointer',
+                    }}
+                    type="submit"
+                  >
+                    Enroll
+                  </button>
+                )}
 
             <div className="enroll_discl">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

@@ -1,22 +1,22 @@
-import { AppBar, Toolbar, Button } from "@material-ui/core";
-import { Link } from "react-router-dom";
-import { CityLogo, logoutHandler } from "../../utils/tools";
+import { AppBar, Button, Toolbar } from '@material-ui/core'
+import { Link } from 'react-router-dom'
+import { CityLogo, logoutHandler } from '../../utils/tools'
 
-const Header = ({ user }: any) => {
+function Header({ user }: any) {
   return (
     <AppBar
       position="fixed"
       style={{
-        backgroundColor: "#98c5e9",
-        boxShadow: "none",
-        padding: "10px 0",
-        borderBottom: "2px solid #00285e",
+        backgroundColor: '#98c5e9',
+        boxShadow: 'none',
+        padding: '10px 0',
+        borderBottom: '2px solid #00285e',
       }}
     >
-      <Toolbar style={{ display: "flex" }}>
+      <Toolbar style={{ display: 'flex' }}>
         <div style={{ flexGrow: 1 }}>
           <div className="header_logo">
-            <CityLogo link={true} linkTo={"/"} width="70px" height="70px" />
+            <CityLogo link={true} linkTo="/" width="70px" height="70px" />
           </div>
         </div>
 
@@ -27,20 +27,22 @@ const Header = ({ user }: any) => {
         <Link to="/the_team">
           <Button color="inherit">The team</Button>
         </Link>
-        {user ? (
-          <>
-            <Link to="/dashboard">
-              <Button color="inherit">Dashboard</Button>
-            </Link>
+        {user
+          ? (
+              <>
+                <Link to="/dashboard">
+                  <Button color="inherit">Dashboard</Button>
+                </Link>
 
-            <Button color="inherit" onClick={logoutHandler}>
-              Log out
-            </Button>
-          </>
-        ) : null}
+                <Button color="inherit" onClick={logoutHandler}>
+                  Log out
+                </Button>
+              </>
+            )
+          : null}
       </Toolbar>
     </AppBar>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

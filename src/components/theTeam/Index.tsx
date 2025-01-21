@@ -1,6 +1,6 @@
+import { CircularProgress } from '@material-ui/core'
 import { useEffect, useState } from 'react'
 import { Slide } from 'react-awesome-reveal'
-import { CircularProgress } from '@material-ui/core'
 import { Helmet } from 'react-helmet-async'
 import { firebase, playersCollection } from '../../services/firebase'
 import PlayerCard from '../../utils/playCard'
@@ -16,7 +16,7 @@ interface Player {
   url: string
 }
 
-const TheTeam = () => {
+function TheTeam() {
   const [loading, setLoading] = useState(true)
   const [players, setPlayers] = useState<Player[]>([])
 
@@ -25,19 +25,19 @@ const TheTeam = () => {
       playersCollection
         .get()
         .then((snapshot) => {
-          const playersData: any[] = snapshot.docs.map((doc) => ({
+          const playersData: any[] = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
           }))
 
-          const fetchPlayerUrls = playersData.map((player) =>
+          const fetchPlayerUrls = playersData.map(player =>
             firebase
               .storage()
               .ref('players')
               .child(player.image)
               .getDownloadURL()
-              .then((url) => ({ ...player, url }))
-              .catch(() => null)
+              .then(url => ({ ...player, url }))
+              .catch(() => null),
           )
 
           Promise.all(fetchPlayerUrls)
@@ -58,21 +58,24 @@ const TheTeam = () => {
   }, [players.length])
 
   const showPlayerByCategory = (category: string) => {
-    if (players.length === 0) return null
+    if (players.length === 0)
+      return null
 
-    return players.map((player) =>
-      player.position === category ? (
-        <Slide left key={player.id} triggerOnce>
-          <div className="item">
-            <PlayerCard
-              number={player.number}
-              name={player.name}
-              lastname={player.lastname}
-              bck={player.url}
-            />
-          </div>
-        </Slide>
-      ) : null
+    return players.map(player =>
+      player.position === category
+        ? (
+            <Slide left key={player.id} triggerOnce>
+              <div className="item">
+                <PlayerCard
+                  number={player.number}
+                  name={player.name}
+                  lastname={player.lastname}
+                  bck={player.url}
+                />
+              </div>
+            </Slide>
+          )
+        : null,
     )
   }
 
@@ -82,39 +85,41 @@ const TheTeam = () => {
         <title>MCity Club - Team</title>
       </Helmet>
       <div className="the_team_container">
-        {loading ? (
-          <div className="progress">
-            <CircularProgress />
-          </div>
-        ) : (
-          <div>
-            <div className="team_category_wrapper">
-              <div className="title">Keepers</div>
-              <div className="team_cards">{showPlayerByCategory('Keeper')}</div>
-            </div>
-
-            <div className="team_category_wrapper">
-              <div className="title">Defence</div>
-              <div className="team_cards">
-                {showPlayerByCategory('Defence')}
+        {loading
+          ? (
+              <div className="progress">
+                <CircularProgress />
               </div>
-            </div>
+            )
+          : (
+              <div>
+                <div className="team_category_wrapper">
+                  <div className="title">Keepers</div>
+                  <div className="team_cards">{showPlayerByCategory('Keeper')}</div>
+                </div>
 
-            <div className="team_category_wrapper">
-              <div className="title">Midfield</div>
-              <div className="team_cards">
-                {showPlayerByCategory('Midfield')}
-              </div>
-            </div>
+                <div className="team_category_wrapper">
+                  <div className="title">Defence</div>
+                  <div className="team_cards">
+                    {showPlayerByCategory('Defence')}
+                  </div>
+                </div>
 
-            <div className="team_category_wrapper">
-              <div className="title">Strikers</div>
-              <div className="team_cards">
-                {showPlayerByCategory('Striker')}
+                <div className="team_category_wrapper">
+                  <div className="title">Midfield</div>
+                  <div className="team_cards">
+                    {showPlayerByCategory('Midfield')}
+                  </div>
+                </div>
+
+                <div className="team_category_wrapper">
+                  <div className="title">Strikers</div>
+                  <div className="team_cards">
+                    {showPlayerByCategory('Striker')}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            )}
       </div>
     </>
   )

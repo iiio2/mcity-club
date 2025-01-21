@@ -1,37 +1,38 @@
-import { ReactNode, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { firebase } from "../services/firebase";
+import type { ReactNode } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { firebase } from '../services/firebase'
 
 interface Props {
-  children?: ReactNode;
+  children?: ReactNode
 }
+function AuthGuard({ children }: Props) {
+  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(firebase.auth().currentUser)
 
-const AuthGuard = ({ children }: Props): JSX.Element | null => {
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(firebase.auth().currentUser);
-
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
+      setUser(currentUser)
+      setLoading(false)
+    })
 
     return () => {
-      unsubscribe();
-    };
-  }, []);
+      unsubscribe()
+    }
+  }, [])
 
   useEffect(() => {
     if (!loading && !user) {
-      navigate("/sign_in", { replace: true });
+      navigate('/sign_in', { replace: true })
     }
-  }, [loading, user, navigate]);
+  }, [loading, user, navigate])
 
-  if (loading) return null;
+  if (loading)
+    return null
 
-  return <>{children}</>;
-};
+  return <>{children}</>
+}
 
-export default AuthGuard;
+export default AuthGuard

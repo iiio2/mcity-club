@@ -1,29 +1,29 @@
-import { useState, useEffect } from "react";
-import { Slide } from "react-awesome-reveal";
-import { matchesCollection } from "../../../services/firebase";
-import MatchesBlock from "../../../utils/matches_block";
+import { useEffect, useState } from 'react'
+import { Slide } from 'react-awesome-reveal'
+import { matchesCollection } from '../../../services/firebase'
+import MatchesBlock from '../../../utils/matches_block'
 
-const Blocks = () => {
-  const [matches, seMatches] = useState<any[]>([]);
+function Blocks() {
+  const [matches, seMatches] = useState<any[]>([])
 
   useEffect(() => {
     matchesCollection
       .get()
       .then((snapshot) => {
-        const matches = snapshot.docs.map((doc) => ({
+        const matches = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
-        }));
-        seMatches(matches);
+        }))
+        seMatches(matches)
       })
       .catch((error) => {
-        console.log(error);
-      });
-  }, [matches]);
+        console.log(error)
+      })
+  }, [matches])
 
   const showMatches = (matches: any[]) =>
     matches
-      ? matches.map((match) => (
+      ? matches.map(match => (
           <Slide bottom key={match.id} className="item" triggerOnce>
             <div>
               <div className="wrapper">
@@ -32,9 +32,9 @@ const Blocks = () => {
             </div>
           </Slide>
         ))
-      : null;
+      : null
 
-  return <div className="home_matches">{showMatches(matches)}</div>;
-};
+  return <div className="home_matches">{showMatches(matches)}</div>
+}
 
-export default Blocks;
+export default Blocks

@@ -1,19 +1,19 @@
-import { Routes, Route } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import Header from "./components/layouts/Header";
-import Footer from "./components/layouts/Footer";
-import Home from "./components/home/Index";
-import SignIn from "./components/signIn/Index";
-import TheMatches from "./components/theMatches/Index";
-import TheTeam from "./components/theTeam/Index";
-import Dashboard from "./components/admin/Dashboard";
-import AdminMatches from "./components/admin/matches/Index";
-import MatchForm from "./components/admin/matches/MatchForm";
-import AdminPlayers from "./components/admin/players/Index";
-import PlayerForm from "./components/admin/players/PlayerForm";
-import AuthGuard from "./hoc/AuthGuard";
-import NotFound from "./components/notFound";
-import "react-toastify/dist/ReactToastify.css";
+import { Route, Routes } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+import Dashboard from './components/admin/Dashboard'
+import AdminMatches from './components/admin/matches/Index'
+import MatchForm from './components/admin/matches/MatchForm'
+import AdminPlayers from './components/admin/players/Index'
+import PlayerForm from './components/admin/players/PlayerForm'
+import Home from './components/home/Index'
+import Footer from './components/layouts/Footer'
+import Header from './components/layouts/Header'
+import NotFound from './components/notFound'
+import SignIn from './components/signIn/Index'
+import TheMatches from './components/theMatches/Index'
+import TheTeam from './components/theTeam/Index'
+import AuthGuard from './hoc/AuthGuard'
+import 'react-toastify/dist/ReactToastify.css'
 
 function App({ user }: any) {
   return (
@@ -26,73 +26,73 @@ function App({ user }: any) {
         <Route path="/the_matches" element={<TheMatches />} />
         <Route
           path="/the_team"
-          element={
+          element={(
             <AuthGuard>
               <TheTeam />
             </AuthGuard>
-          }
+          )}
         />
         <Route
           path="/dashboard"
-          element={
+          element={(
             <AuthGuard>
               <Dashboard />
             </AuthGuard>
-          }
+          )}
         />
         <Route
           path="/admin_matches"
-          element={
+          element={(
             <AuthGuard>
               <AdminMatches />
             </AuthGuard>
-          }
+          )}
         />
         <Route
           path="/admin_matches/add_match"
-          element={
+          element={(
             <AuthGuard>
               <MatchForm />
             </AuthGuard>
-          }
+          )}
         />
         <Route
           path="/admin_matches/edit_match/:matchid"
-          element={
+          element={(
             <AuthGuard>
               <MatchForm />
             </AuthGuard>
-          }
+          )}
         />
         <Route
           path="/admin_players"
-          element={
+          element={(
             <AuthGuard>
               <AdminPlayers />
             </AuthGuard>
-          }
+          )}
         />
         <Route
           path="/admin_players/add_player/"
-          element={
+          element={(
             <AuthGuard>
               <PlayerForm />
             </AuthGuard>
-          }
+          )}
         />
         <Route
           path="/admin_players/edit_player/:playerid"
-          element={
+          element={(
             <AuthGuard>
               <PlayerForm />
             </AuthGuard>
-          }
+          )}
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </main>
-  );
+  )
 }
 
-export default App;
+export default App

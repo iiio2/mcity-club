@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-const NotFound = () => {
+function NotFound() {
   return (
     <>
       <Helmet>

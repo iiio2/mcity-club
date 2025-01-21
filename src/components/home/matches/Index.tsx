@@ -1,7 +1,7 @@
-import { Tag } from "../../../utils/tools";
-import Blocks from "./Blocks";
+import { Tag } from '../../../utils/tools'
+import Blocks from './Blocks'
 
-const Matches = () => {
+function Matches() {
   return (
     <div className="home_matches_wrapper">
       <div className="container">
@@ -16,7 +16,7 @@ const Matches = () => {
         </Tag>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Matches;
+export default Matches

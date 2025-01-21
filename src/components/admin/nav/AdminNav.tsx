@@ -1,27 +1,27 @@
-import { Link } from "react-router-dom";
-import ListItem from "@material-ui/core/ListItem";
-import { logoutHandler } from "../../../utils/tools";
+import ListItem from '@material-ui/core/ListItem'
+import { Link } from 'react-router-dom'
+import { logoutHandler } from '../../../utils/tools'
 
-const AdminNav = () => {
+function AdminNav() {
   const links = [
     {
-      title: "Matches",
-      linkTo: "/admin_matches",
+      title: 'Matches',
+      linkTo: '/admin_matches',
     },
     {
-      title: "Players",
-      linkTo: "/admin_players",
+      title: 'Players',
+      linkTo: '/admin_players',
     },
-  ];
+  ]
 
   const renderItems = () =>
-    links.map((link) => (
+    links.map(link => (
       <Link to={link.linkTo} key={link.title}>
         <ListItem button className="admin_nav_link">
           {link.title}
         </ListItem>
       </Link>
-    ));
+    ))
 
   return (
     <>
@@ -30,7 +30,7 @@ const AdminNav = () => {
         Log out
       </ListItem>
     </>
-  );
-};
+  )
+}
 
-export default AdminNav;
+export default AdminNav

@@ -1,7 +1,7 @@
-import Animation from "./Animation";
-import Enroll from "./Enroll";
+import Animation from './Animation'
+import Enroll from './Enroll'
 
-const Promotion = () => {
+function Promotion() {
   return (
     <div className="promotion_wrapper">
       <div className="container">
@@ -9,7 +9,7 @@ const Promotion = () => {
         <Enroll />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Promotion;
+export default Promotion

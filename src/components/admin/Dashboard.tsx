@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import AdminLayout from '../../hoc/AdminLayout'
 
-const Dashboard = () => {
+function Dashboard() {
   return (
     <>
       <Helmet>

@@ -4,7 +4,7 @@ import Matches from './matches/Index'
 import MeetPlayers from './meetPlayers/Index'
 import Promotion from './promotion/Index'
 
-const Home = () => {
+function Home() {
   return (
     <>
       <Helmet>

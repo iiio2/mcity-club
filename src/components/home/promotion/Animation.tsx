@@ -1,6 +1,6 @@
-import { Zoom } from "react-awesome-reveal";
+import { Zoom } from 'react-awesome-reveal'
 
-const Animation = () => {
+function Animation() {
   return (
     <div className="promotion_animation">
       <div className="left">
@@ -17,7 +17,7 @@ const Animation = () => {
         </Zoom>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Animation;
+export default Animation

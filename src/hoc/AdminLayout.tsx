@@ -1,6 +1,6 @@
-import AdminNav from "../components/admin/nav/AdminNav";
+import AdminNav from '../components/admin/nav/AdminNav'
 
-const AdminLayout = (props: any) => {
+function AdminLayout(props: any) {
   return (
     <div className="admin_container">
       <div className="admin_left_nav">
@@ -11,7 +11,7 @@ const AdminLayout = (props: any) => {
         {props.children}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AdminLayout;
+export default AdminLayout

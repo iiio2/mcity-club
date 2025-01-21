@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
   Button,
+  CircularProgress,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  Paper,
-  CircularProgress,
 } from '@material-ui/core'
+import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { matchesCollection } from '../../../services/firebase'
+import { Link } from 'react-router-dom'
 import AdminLayout from '../../../hoc/AdminLayout'
+import { matchesCollection } from '../../../services/firebase'
 import { showErrorToast } from '../../../utils/tools'
 
-const AdminMatches = () => {
+function AdminMatches() {
   const [lastVisible, setLastVisible] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [matches, setMatches] = useState<any[] | null>(null)
@@ -28,7 +28,7 @@ const AdminMatches = () => {
         .get()
         .then((snapshot) => {
           const lastVisible = snapshot.docs[snapshot.docs.length - 1]
-          const matches = snapshot.docs.map((doc) => ({
+          const matches = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
           }))
@@ -53,7 +53,7 @@ const AdminMatches = () => {
         .get()
         .then((snapshot) => {
           const lastVisible = snapshot.docs[snapshot.docs.length - 1]
-          const newMatches = snapshot.docs.map((doc) => ({
+          const newMatches = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
           }))
@@ -69,7 +69,8 @@ const AdminMatches = () => {
         .finally(() => {
           setLoading(false)
         })
-    } else {
+    }
+    else {
       showErrorToast('nothing to load')
     }
   }
@@ -85,7 +86,7 @@ const AdminMatches = () => {
             disableElevation
             variant="outlined"
             component={Link}
-            to={'/admin_matches/add_match'}
+            to="/admin_matches/add_match"
           >
             Add match
           </Button>
@@ -103,26 +104,35 @@ const AdminMatches = () => {
             </TableHead>
             <TableBody>
               {matches
-                ? matches.map((match) => (
+                ? matches.map(match => (
                     <TableRow key={match.id}>
                       <TableCell>{match.date}</TableCell>
                       <TableCell>
                         <Link to={`/admin_matches/edit_match/${match.id}`}>
-                          {match.away} <strong>-</strong> {match.local}
+                          {match.away}
+                          {' '}
+                          <strong>-</strong>
+                          {' '}
+                          {match.local}
                         </Link>
                       </TableCell>
                       <TableCell>
-                        {match.resultAway} <strong>-</strong>{' '}
+                        {match.resultAway}
+                        {' '}
+                        <strong>-</strong>
+                        {' '}
                         {match.resultLocal}
                       </TableCell>
                       <TableCell>
-                        {match.final === 'Yes' ? (
-                          <span className="matches_tag_red">Final</span>
-                        ) : (
-                          <span className="matches_tag_green">
-                            Not played yet
-                          </span>
-                        )}
+                        {match.final === 'Yes'
+                          ? (
+                              <span className="matches_tag_red">Final</span>
+                            )
+                          : (
+                              <span className="matches_tag_green">
+                                Not played yet
+                              </span>
+                            )}
                       </TableCell>
                     </TableRow>
                   ))
@@ -141,9 +151,11 @@ const AdminMatches = () => {
         </Button>
 
         <div className="admin_progress">
-          {loading ? (
-            <CircularProgress thickness={7} style={{ color: '#98c5e9' }} />
-          ) : null}
+          {loading
+            ? (
+                <CircularProgress thickness={7} style={{ color: '#98c5e9' }} />
+              )
+            : null}
         </div>
       </AdminLayout>
     </>

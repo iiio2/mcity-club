@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Helmet } from 'react-helmet-async'
 import {
   Button,
+  CircularProgress,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  Paper,
-  CircularProgress,
 } from '@material-ui/core'
-import { playersCollection } from '../../../services/firebase'
+import { useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
 import AdminLayout from '../../../hoc/AdminLayout'
+import { playersCollection } from '../../../services/firebase'
 import { showErrorToast } from '../../../utils/tools'
 
-const AdminPlayers = () => {
+function AdminPlayers() {
   const [lastVisible, setLastVisible] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [players, setPlayers] = useState<any[] | null>(null)
@@ -28,7 +28,7 @@ const AdminPlayers = () => {
         .get()
         .then((snapshot) => {
           const lastVisible = snapshot.docs[snapshot.docs.length - 1]
-          const players = snapshot.docs.map((doc) => ({
+          const players = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
           }))
@@ -53,7 +53,7 @@ const AdminPlayers = () => {
         .get()
         .then((snapshot) => {
           const lastVisible = snapshot.docs[snapshot.docs.length - 1]
-          const newPlayers = snapshot.docs.map((doc) => ({
+          const newPlayers = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
           }))
@@ -69,7 +69,8 @@ const AdminPlayers = () => {
         .finally(() => {
           setLoading(false)
         })
-    } else {
+    }
+    else {
       showErrorToast('nothing to load')
     }
   }
@@ -85,7 +86,7 @@ const AdminPlayers = () => {
             disableElevation
             variant="outlined"
             component={Link}
-            to={'/admin_players/add_player'}
+            to="/admin_players/add_player"
           >
             Add player
           </Button>
@@ -103,7 +104,7 @@ const AdminPlayers = () => {
             </TableHead>
             <TableBody>
               {players
-                ? players.map((player) => (
+                ? players.map(player => (
                     <TableRow key={player.id}>
                       <TableCell>
                         <Link to={`/admin_players/edit_player/${player.id}`}>
@@ -134,9 +135,11 @@ const AdminPlayers = () => {
         </Button>
 
         <div className="admin_progress">
-          {loading ? (
-            <CircularProgress thickness={7} style={{ color: '#98c5e9' }} />
-          ) : null}
+          {loading
+            ? (
+                <CircularProgress thickness={7} style={{ color: '#98c5e9' }} />
+              )
+            : null}
         </div>
       </AdminLayout>
     </>

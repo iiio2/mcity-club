@@ -1,34 +1,34 @@
-import { useState } from "react";
-import { Tag } from "../../../utils/tools";
-import { Fade } from "react-awesome-reveal";
-import HomeCards from "./Cards";
+import { useState } from 'react'
+import { Fade } from 'react-awesome-reveal'
+import { Tag } from '../../../utils/tools'
+import HomeCards from './Cards'
 
-let tagDefault = {
-  bck: "#0e1731",
-  size: "100px",
-  color: "#ffffff",
-};
+const tagDefault = {
+  bck: '#0e1731',
+  size: '100px',
+  color: '#ffffff',
+}
 
-const MeetPlayers = () => {
-  const [show, setShow] = useState(false);
+function MeetPlayers() {
+  const [show, setShow] = useState(false)
 
   const showTextTag = (text: string) => (
     <Tag
       {...tagDefault}
       add={{
-        display: "inline-block",
-        marginBottom: "20px",
+        display: 'inline-block',
+        marginBottom: '20px',
       }}
     >
       {text}
     </Tag>
-  );
+  )
 
   return (
     <Fade
       onVisibilityChange={(inView) => {
         if (inView) {
-          setShow(true);
+          setShow(true)
         }
       }}
       triggerOnce
@@ -40,9 +40,9 @@ const MeetPlayers = () => {
               <HomeCards show={show} />
             </div>
             <div className="home_text_wrapper">
-              <div>{showTextTag("Meet")}</div>
-              <div>{showTextTag("The")}</div>
-              <div>{showTextTag("Players")}</div>
+              <div>{showTextTag('Meet')}</div>
+              <div>{showTextTag('The')}</div>
+              <div>{showTextTag('Players')}</div>
               <div>
                 <Tag
                   bck="#ffffff"
@@ -51,9 +51,9 @@ const MeetPlayers = () => {
                   link={true}
                   linkTo="/the_team"
                   add={{
-                    display: "inline-block",
-                    marginBottom: "27px",
-                    border: "1px solid #0e1731",
+                    display: 'inline-block',
+                    marginBottom: '27px',
+                    border: '1px solid #0e1731',
                   }}
                 >
                   Meet them here
@@ -64,6 +64,6 @@ const MeetPlayers = () => {
         </div>
       </div>
     </Fade>
-  );
-};
-export default MeetPlayers;
+  )
+}
+export default MeetPlayers

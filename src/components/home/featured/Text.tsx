@@ -1,8 +1,8 @@
-import { easePolyOut } from "d3-ease";
-import { Animate } from "react-move";
-import FeaturedPlayer from "../../../resources/images/featured_player.png";
+import { easePolyOut } from 'd3-ease'
+import { Animate } from 'react-move'
+import FeaturedPlayer from '../../../resources/images/featured_player.png'
 
-const Text = () => {
+function Text() {
   const animateNumber = () => (
     <Animate
       show={true}
@@ -28,7 +28,7 @@ const Text = () => {
         </div>
       )}
     </Animate>
-  );
+  )
 
   const animateFirstText = () => (
     <Animate
@@ -57,7 +57,7 @@ const Text = () => {
         </div>
       )}
     </Animate>
-  );
+  )
 
   const animateSecondText = () => (
     <Animate
@@ -86,7 +86,7 @@ const Text = () => {
         </div>
       )}
     </Animate>
-  );
+  )
 
   const animatePlayer = () => (
     <Animate
@@ -107,10 +107,11 @@ const Text = () => {
             background: `url(${FeaturedPlayer}) no-repeat`,
             transform: `translate(550px,201px)`,
           }}
-        ></div>
+        >
+        </div>
       )}
     </Animate>
-  );
+  )
 
   return (
     <div className="featured_text">
@@ -119,7 +120,7 @@ const Text = () => {
       {animateFirstText()}
       {animateSecondText()}
     </div>
-  );
-};
+  )
+}
 
-export default Text;
+export default Text

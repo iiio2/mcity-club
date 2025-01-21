@@ -1,27 +1,27 @@
-import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-} from "@material-ui/core";
-import { positionsCollection } from "../../services/firebase";
+} from '@material-ui/core'
+import { useEffect, useState } from 'react'
+import { positionsCollection } from '../../services/firebase'
 
-const LeagueTable = () => {
-  const [positions, setPosition] = useState<any[] | null>(null);
+function LeagueTable() {
+  const [positions, setPosition] = useState<any[] | null>(null)
 
   useEffect(() => {
     if (!positions) {
       positionsCollection.get().then((snapshot) => {
-        const positions = snapshot.docs.map((doc) => ({
+        const positions = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
-        }));
-        setPosition(positions);
-      });
+        }))
+        setPosition(positions)
+      })
     }
-  }, [positions]);
+  }, [positions])
 
   const showTeamPositions = () =>
     positions
@@ -35,7 +35,7 @@ const LeagueTable = () => {
             <TableCell>{pos.pts}</TableCell>
           </TableRow>
         ))
-      : null;
+      : null
 
   return (
     <div className="league_table_wrapper">
@@ -56,7 +56,7 @@ const LeagueTable = () => {
         </Table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LeagueTable;
+export default LeagueTable

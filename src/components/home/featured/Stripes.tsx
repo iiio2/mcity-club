@@ -1,10 +1,10 @@
-import { easePolyOut } from "d3-ease";
-import { Animate } from "react-move";
+import { easePolyOut } from 'd3-ease'
+import { Animate } from 'react-move'
 
-let stripesState = [
+const stripesState = [
   {
     id: 1292751,
-    background: "#98c5e9",
+    background: '#98c5e9',
     left: 120,
     rotate: 25,
     top: -260,
@@ -12,7 +12,7 @@ let stripesState = [
   },
   {
     id: 20392323,
-    background: "#ffffff",
+    background: '#ffffff',
     left: 360,
     rotate: 25,
     top: -394,
@@ -20,22 +20,22 @@ let stripesState = [
   },
   {
     id: 2018261,
-    background: "#98c5e9",
+    background: '#98c5e9',
     left: 600,
     rotate: 25,
     top: -498,
     delay: 400,
   },
-];
+]
 
-const Stripes = () => {
+function Stripes() {
   const handleShowStripe = () =>
-    stripesState.map((stripe) => (
+    stripesState.map(stripe => (
       <Animate
         key={stripe.id}
         show={true}
         start={{
-          background: "#ffffff",
+          background: '#ffffff',
           opacity: 0,
           left: 0,
           rotate: 0,
@@ -62,12 +62,13 @@ const Stripes = () => {
               opacity,
               transform: `rotate(${rotate}deg) translate(${left}px,${top}px)`,
             }}
-          ></div>
+          >
+          </div>
         )}
       </Animate>
-    ));
+    ))
 
-  return <div className="featured_stripes">{handleShowStripe()}</div>;
-};
+  return <div className="featured_stripes">{handleShowStripe()}</div>
+}
 
-export default Stripes;
+export default Stripes

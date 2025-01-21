@@ -1,11 +1,11 @@
-import { easePolyOut } from "d3-ease";
-import Animate from "react-move/Animate";
-import PlayerCard from "../../../utils/playCard";
-import Otamendi from "../../../resources/images/players/Otamendi.png";
-import Sterling from "../../../resources/images/players/Raheem_Sterling.png";
-import Kompany from "../../../resources/images/players/Vincent_Kompany.png";
+import { easePolyOut } from 'd3-ease'
+import Animate from 'react-move/Animate'
+import Otamendi from '../../../resources/images/players/Otamendi.png'
+import Sterling from '../../../resources/images/players/Raheem_Sterling.png'
+import Kompany from '../../../resources/images/players/Vincent_Kompany.png'
+import PlayerCard from '../../../utils/playCard'
 
-let cards = [
+const cards = [
   {
     bottom: 90,
     left: 300,
@@ -26,9 +26,9 @@ let cards = [
     left: 0,
     player: Kompany,
   },
-];
+]
 
-const HomeCards = (props: any) => {
+function HomeCards(props: any) {
   const showAnimateCards = () =>
     cards.map((card, i) => (
       <Animate
@@ -47,7 +47,7 @@ const HomeCards = (props: any) => {
         {({ left, bottom }) => (
           <div
             style={{
-              position: "absolute",
+              position: 'absolute',
               left,
               bottom,
             }}
@@ -61,9 +61,9 @@ const HomeCards = (props: any) => {
           </div>
         )}
       </Animate>
-    ));
+    ))
 
-  return <div>{showAnimateCards()}</div>;
-};
+  return <div>{showAnimateCards()}</div>
+}
 
-export default HomeCards;
+export default HomeCards

@@ -1,24 +1,24 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Helmet } from 'react-helmet-async'
 import {
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
   Button,
+  FormControl,
+  MenuItem,
+  Select,
+  TextField,
 } from '@material-ui/core'
 import { useFormik } from 'formik'
+import { useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
+import { useNavigate, useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { playersCollection, firebase } from '../../../services/firebase'
 import AdminLayout from '../../../hoc/AdminLayout'
+import { firebase, playersCollection } from '../../../services/firebase'
 import Fileuploader from '../../../utils/fileUploader'
 import {
+  selectErrorHelper,
+  selectIsError,
   showErrorToast,
   showSuccessToast,
   textErrorHelper,
-  selectErrorHelper,
-  selectIsError,
 } from '../../../utils/tools'
 
 const defaultValues = {
@@ -29,7 +29,7 @@ const defaultValues = {
   image: '',
 }
 
-const PlayerForm = () => {
+function PlayerForm() {
   const [loading, setLoading] = useState(false)
   const [formType, setFormType] = useState('')
   const [values, setValues] = useState(defaultValues)
@@ -57,7 +57,7 @@ const PlayerForm = () => {
   })
 
   const submitForm = (values: any) => {
-    let dataToSubmit = values
+    const dataToSubmit = values
     setLoading(true)
 
     if (formType === 'add') {
@@ -71,7 +71,8 @@ const PlayerForm = () => {
         .catch((error) => {
           showErrorToast(error)
         })
-    } else {
+    }
+    else {
       playersCollection
         .doc(playerid)
         .update(dataToSubmit)
@@ -106,14 +107,16 @@ const PlayerForm = () => {
 
             setFormType('edit')
             setValues(snapshot.data() as any)
-          } else {
+          }
+          else {
             showErrorToast('Sorry, nothing was found')
           }
         })
         .catch((error) => {
           showErrorToast(error)
         })
-    } else {
+    }
+    else {
       setFormType('add')
       setValues(defaultValues)
     }
@@ -131,7 +134,10 @@ const PlayerForm = () => {
   return (
     <>
       <Helmet>
-        <title>MCity Club - {playerid ? 'Edit Player' : 'Add Player'}</title>
+        <title>
+          MCity Club -
+          {playerid ? 'Edit Player' : 'Add Player'}
+        </title>
       </Helmet>
       <AdminLayout title={formType === 'add' ? 'Add player' : 'Edit player'}>
         <div className="editplayers_dialog_wrapper">
@@ -142,7 +148,7 @@ const PlayerForm = () => {
                   dir="players"
                   defaultImg={defaultImg}
                   defaultImgName={formik.values.image}
-                  filename={(filename) => updateImageName(filename)}
+                  filename={filename => updateImageName(filename)}
                   resetImage={() => resetImage()}
                 />
                 {selectErrorHelper(formik, 'image')}
