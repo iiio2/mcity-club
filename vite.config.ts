@@ -1,3 +1,4 @@
+import legacy from '@vitejs/plugin-legacy'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
@@ -7,5 +8,10 @@ export default defineConfig({
     host: true,
     port: 5000,
   },
-  plugins: [react()],
+  plugins: [
+    react(),
+    legacy({
+      targets: ['defaults', 'not IE 11'],
+    }),
+  ],
 })
