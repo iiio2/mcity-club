@@ -46,6 +46,7 @@ function SignIn({ user }: any) {
     <>
       <Helmet>
         <title>MCity Club - Sign In</title>
+        <meta property='og:title' content='Sign In' />
       </Helmet>
       {!user
         ? (

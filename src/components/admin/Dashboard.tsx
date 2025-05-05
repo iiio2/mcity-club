@@ -6,6 +6,7 @@ function Dashboard() {
     <>
       <Helmet>
         <title>MCity Club - Dashboard</title>
+        <meta property='og:title' content='Dashboard' />
       </Helmet>
       <AdminLayout>
         <div className="user_dashboard">

@@ -138,6 +138,7 @@ function PlayerForm() {
           MCity Club -
           {playerid ? 'Edit Player' : 'Add Player'}
         </title>
+        <meta property='og:title' content='Add Player' />
       </Helmet>
       <AdminLayout title={formType === 'add' ? 'Add player' : 'Edit player'}>
         <div className="editplayers_dialog_wrapper">

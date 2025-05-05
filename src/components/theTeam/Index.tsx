@@ -83,6 +83,7 @@ function TheTeam() {
     <>
       <Helmet>
         <title>MCity Club - Team</title>
+        <link property='og:title' content='Team' />
       </Helmet>
       <div className="the_team_container">
         {loading

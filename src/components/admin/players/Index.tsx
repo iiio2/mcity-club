@@ -79,6 +79,7 @@ function AdminPlayers() {
     <>
       <Helmet>
         <title>MCity Club - Dashboard for Players</title>
+        <meta property='og:title' content='Dashboard for Players' />
       </Helmet>
       <AdminLayout title="The players">
         <div className="mb-5">

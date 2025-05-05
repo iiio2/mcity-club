@@ -69,6 +69,7 @@ function TheMatches() {
     <>
       <Helmet>
         <title>MCity Club - Matches</title>
+        <meta property='og:title' content='Matches' />
       </Helmet>
       {matches
         ? (

@@ -9,6 +9,7 @@ function Home() {
     <>
       <Helmet>
         <title>MCity Club - Ultimate destination for football</title>
+        <meta property='og:title' content='Home Page' />
       </Helmet>
       <Featured />
       <Matches />
