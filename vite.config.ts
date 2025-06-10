@@ -14,4 +14,13 @@ export default defineConfig({
       targets: ['defaults', 'not IE 11'],
     }),
   ],
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react-move',
+      '@material-ui/core',
+      '@material-ui/icons',
+    ],
+  },
 })
