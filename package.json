@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.0",
   "private": true,
-  "packageManager": "pnpm@10.12.1",
+  "packageManager": "pnpm@10.13.1",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -24,27 +24,27 @@
     "react-firebase-file-uploader": "2.4.4",
     "react-helmet-async": "^2.0.5",
     "react-move": "6.5.0",
-    "react-router-dom": "^7.6.2",
+    "react-router-dom": "^7.6.3",
     "react-toastify": "7.0.3",
     "yup": "1.6.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.15.0",
+    "@antfu/eslint-config": "^4.16.2",
     "@types/d3-ease": "2.0.4",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "@typescript-eslint/eslint-plugin": "^8.34.1",
-    "@typescript-eslint/parser": "^8.34.1",
-    "@vitejs/plugin-legacy": "^6.1.1",
-    "@vitejs/plugin-react": "^4.5.2",
-    "eslint": "^9.29.0",
+    "@typescript-eslint/eslint-plugin": "^8.36.0",
+    "@typescript-eslint/parser": "^8.36.0",
+    "@vitejs/plugin-legacy": "^7.0.0",
+    "@vitejs/plugin-react": "^4.6.0",
+    "eslint": "^9.30.1",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "lint-staged": "^16.1.2",
     "simple-git-hooks": "^2.13.0",
     "terser": "^5.43.1",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5"
+    "vite": "^7.0.4"
   },
   "pnpm": {
     "patchedDependencies": {
