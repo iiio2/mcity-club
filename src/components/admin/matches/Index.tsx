@@ -79,7 +79,7 @@ function AdminMatches() {
     <>
       <Helmet>
         <title>MCity Club - Dashboard for Matches</title>
-        <meta property='og:title' content='Dashboard for Matches' />
+        <meta property="og:title" content="Dashboard for Matches" />
       </Helmet>
       <AdminLayout title="The matches">
         <div className="mb-5">

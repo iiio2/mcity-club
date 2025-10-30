@@ -16,9 +16,7 @@ function Blocks() {
         }))
         seMatches(matches)
       })
-      .catch((error) => {
-        console.log(error)
-      })
+      .catch(() => {})
   }, [matches])
 
   const showMatches = (matches: any[]) =>

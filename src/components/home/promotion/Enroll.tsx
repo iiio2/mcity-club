@@ -22,7 +22,7 @@ function Enroll() {
     },
   })
 
-  const submitForm = async (values: any) => {
+  async function submitForm(values: any) {
     try {
       const isOnTheList = await promotionsCollection
         .where('email', '==', values.email)

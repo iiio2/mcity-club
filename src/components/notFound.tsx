@@ -5,7 +5,7 @@ function NotFound() {
     <>
       <Helmet>
         <title>MCity Club - Not Found</title>
-        <meta property='og:title' content='Not Found' />
+        <meta property="og:title" content="Not Found" />
       </Helmet>
       <div className="not_found_container">
         <div>Sorry :(</div>

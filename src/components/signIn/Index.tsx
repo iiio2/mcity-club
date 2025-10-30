@@ -28,7 +28,7 @@ function SignIn({ user }: any) {
     },
   })
 
-  const submitForm = (values: any) => {
+  function submitForm(values: any) {
     firebase
       .auth()
       .signInWithEmailAndPassword(values.email, values.password)
@@ -46,7 +46,7 @@ function SignIn({ user }: any) {
     <>
       <Helmet>
         <title>MCity Club - Sign In</title>
-        <meta property='og:title' content='Sign In' />
+        <meta property="og:title" content="Sign In" />
       </Helmet>
       {!user
         ? (

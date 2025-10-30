@@ -166,7 +166,7 @@ function MatchForm() {
         <title>
           MCity Club -
           {matchid ? 'Edit Match' : 'Add Match'}
-          <meta property='og:title' content={`${matchid ? 'Edit Match' : 'Add Match'}`}  />
+          <meta property="og:title" content={`${matchid ? 'Edit Match' : 'Add Match'}`} />
         </title>
       </Helmet>
       <AdminLayout title={formType === 'add' ? 'Add match' : 'Edit match'}>
