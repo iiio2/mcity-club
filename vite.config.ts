@@ -1,6 +1,7 @@
 import legacy from '@vitejs/plugin-legacy'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+import { beasties } from 'vite-plugin-beasties'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -10,6 +11,11 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    beasties({
+      options: {
+        preload: 'swap',
+      },
+    }),
     legacy({
       targets: ['defaults', 'not IE 11'],
     }),
