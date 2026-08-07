@@ -1,0 +1,9 @@
+allowBuilds:
+  '@firebase/util': set this to true or false
+  core-js: set this to true or false
+  esbuild: set this to true or false
+  protobufjs: set this to true or false
+  simple-git-hooks: set this to true or false
+minimumReleaseAgeExclude:
+  - '@vitejs/plugin-legacy@8.2.3'
+  - vite@8.2.1
