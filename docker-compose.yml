@@ -1,10 +1,22 @@
 services:
   web:
-    build: ./
+    build:
+      context: .
+      args:
+        # Make sure the mounted source has the same ownership as the mcity user
+        # below, otherwise Vite will not be able to write its cache.
+        # e.g., sudo chown -R 911:911 .
+        UID: ${UID:-911}
+        GID: ${GID:-911}
+    volumes:
+      # Live source for hot reload.
+      - './:/app'
+      # Keep the image's node_modules; the host copy is built for a different
+      # libc. Required - the bind mount above would otherwise shadow it.
+      - '/app/node_modules'
+    env_file:
+      # Optional so a fresh clone, which has no .env, still starts.
+      - path: .env
+        required: false
     ports:
       - 5000:5000
-    volumes:
-      - app:/lib/data
-
-volumes:
-  app:

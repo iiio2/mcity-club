@@ -1,25 +1,31 @@
-FROM docker.io/library/node:lts-alpine
+FROM docker.io/library/node:lts-alpine AS base
 
-WORKDIR app/ 
+# Prepare pnpm https://pnpm.io/installation#using-corepack
+RUN npm i -g corepack@latest && corepack enable && apk add git --no-cache
 
-RUN npm i -g --force corepack && corepack enable
+# Declared after the layers above so a differing UID does not rebuild them.
+ARG UID=911
+ARG GID=911
 
-RUN apk update 
+# Create a dedicated user and group
+RUN set -eux; \
+    addgroup -g $GID mcity; \
+    adduser -u $UID -D -G mcity mcity;
 
-RUN apk add git --no-cache 
+# Prepare work directory, owned by the user that installs and runs everything
+WORKDIR /app
+RUN chown mcity:mcity /app
 
-COPY package.json . 
+USER mcity
 
-COPY pnpm-lock.yaml . 
-
-COPY patches ./patches
+# Prepare deps. Postinstall scripts are skipped: the only one in the tree is
+# simple-git-hooks, which installs git hooks that are useless in a container.
+# The source itself is bind-mounted at runtime, so it is not copied here.
+COPY --chown=mcity:mcity package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY --chown=mcity:mcity patches ./patches
 
 RUN pnpm i --frozen-lockfile --ignore-scripts
 
-COPY . .
-
-RUN pnpm i --frozen-lockfile
-
-EXPOSE 5000 
+EXPOSE 5000/tcp
 
 CMD ["pnpm", "dev"]
