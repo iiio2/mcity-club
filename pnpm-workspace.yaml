@@ -1,3 +1,16 @@
+minimumReleaseAgeExcludePrune: true
+minimumReleaseAgeExclude:
+  - '@vitejs/plugin-legacy@8.2.3'
+
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  # The 2023 ReDoS backport (CVE-2022-25883) was published by a different npm
+  # maintainer than 6.3.0, which the trust policy reads as a downgrade.
+  # Pulled in by @babel/core.
+  - semver@6.3.1
+
+shellEmulator: true
+
 allowBuilds:
   # Only writes a Firebase auto-init config from env vars; unused here.
   '@firebase/util': false
@@ -8,14 +21,3 @@ allowBuilds:
   # Version check only.
   protobufjs: false
   simple-git-hooks: true
-minimumReleaseAgeExclude:
-  - '@vitejs/plugin-legacy@8.2.3'
-  - vite@8.2.1
-shellEmulator: true
-
-trustPolicy: no-downgrade
-trustPolicyExclude:
-  # The 2023 ReDoS backport (CVE-2022-25883) was published by a different npm
-  # maintainer than 6.3.0, which the trust policy reads as a downgrade.
-  # Pulled in by @babel/core.
-  - semver@6.3.1
