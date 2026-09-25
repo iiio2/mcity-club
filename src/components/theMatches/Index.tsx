@@ -1,70 +1,46 @@
-import { CircularProgress } from '@material-ui/core'
-import { useEffect, useReducer, useState } from 'react'
+import type { Match, WithId } from '../../types'
+import { CircularProgress } from '@mui/material'
+import { getDocs } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { matchesCollection } from '../../services/firebase'
-import { showErrorToast } from '../../utils/tools'
+import { matchesCollection, withIds } from '../../services/firebase'
+import { isPlayed } from '../../types'
+import { showErrorToast } from '../../utils/toasts'
 import MatchesList from './MatchesList'
 import LeagueTable from './Tables'
 
+type PlayedFilter = 'All' | 'yes' | 'no'
+type ResultFilter = 'All' | 'W' | 'L' | 'D'
+
 function TheMatches() {
-  const [matches, setMatches] = useState<any[] | null>(null)
-  const [state, dispatch] = useReducer(
-    (prevState: any, nextState: any) => {
-      return { ...prevState, ...nextState }
-    },
-    {
-      filterMatches: null,
-      playedFilter: 'All',
-      resultFilter: 'All',
-    },
-  )
+  const [matches, setMatches] = useState<WithId<Match>[] | null>(null)
+  const [playedFilter, setPlayedFilter] = useState<PlayedFilter>('All')
+  const [resultFilter, setResultFilter] = useState<ResultFilter>('All')
 
   useEffect(() => {
-    if (!matches) {
-      matchesCollection
-        .get()
-        .then((snapshot) => {
-          const matches = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-          setMatches(matches)
-          dispatch({ ...state, filterMatches: matches })
-        })
-        .catch((error) => {
-          showErrorToast(error)
-        })
-    }
-  }, [matches, state])
+    getDocs(matchesCollection)
+      .then(snapshot => setMatches(withIds(snapshot)))
+      .catch(showErrorToast)
+  }, [])
 
-  const showPlayed = (played: any) => {
-    if (matches) {
-      const list = matches.filter((match) => {
-        return match.final === played
-      })
-      dispatch({
-        ...state,
-        filterMatches: played === 'All' ? matches : list,
-        playedFilter: played,
-        resultFilter: 'All',
-      })
-    }
+  const filterMatches = matches?.filter((match) => {
+    if (playedFilter !== 'All')
+      return isPlayed(match) === (playedFilter === 'yes')
+    if (resultFilter !== 'All')
+      return match.result === resultFilter
+    return true
+  })
+
+  const showPlayed = (played: PlayedFilter) => {
+    setPlayedFilter(played)
+    setResultFilter('All')
   }
 
-  const showResult = (result: any) => {
-    if (matches) {
-      const list = matches.filter((match) => {
-        return match.result === result
-      })
-
-      dispatch({
-        ...state,
-        filterMatches: result === 'All' ? matches : list,
-        playedFilter: 'All',
-        resultFilter: result,
-      })
-    }
+  const showResult = (result: ResultFilter) => {
+    setResultFilter(result)
+    setPlayedFilter('All')
   }
+
   return (
     <>
       <Helmet>
@@ -82,7 +58,7 @@ function TheMatches() {
                       <div className="cont">
                         <div
                           className={`option ${
-                            state.playedFilter === 'All' ? 'active' : ''
+                            playedFilter === 'All' ? 'active' : ''
                           }`}
                           onClick={() => showPlayed('All')}
                         >
@@ -90,7 +66,7 @@ function TheMatches() {
                         </div>
                         <div
                           className={`option ${
-                            state.playedFilter === 'yes' ? 'active' : ''
+                            playedFilter === 'yes' ? 'active' : ''
                           }`}
                           onClick={() => showPlayed('yes')}
                         >
@@ -98,7 +74,7 @@ function TheMatches() {
                         </div>
                         <div
                           className={`option ${
-                            state.playedFilter === 'no' ? 'active' : ''
+                            playedFilter === 'no' ? 'active' : ''
                           }`}
                           onClick={() => showPlayed('no')}
                         >
@@ -111,7 +87,7 @@ function TheMatches() {
                       <div className="cont">
                         <div
                           className={`option ${
-                            state.resultFilter === 'All' ? 'active' : ''
+                            resultFilter === 'All' ? 'active' : ''
                           }`}
                           onClick={() => showResult('All')}
                         >
@@ -119,7 +95,7 @@ function TheMatches() {
                         </div>
                         <div
                           className={`option ${
-                            state.resultFilter === 'W' ? 'active' : ''
+                            resultFilter === 'W' ? 'active' : ''
                           }`}
                           onClick={() => showResult('W')}
                         >
@@ -127,7 +103,7 @@ function TheMatches() {
                         </div>
                         <div
                           className={`option ${
-                            state.resultFilter === 'L' ? 'active' : ''
+                            resultFilter === 'L' ? 'active' : ''
                           }`}
                           onClick={() => showResult('L')}
                         >
@@ -135,7 +111,7 @@ function TheMatches() {
                         </div>
                         <div
                           className={`option ${
-                            state.resultFilter === 'D' ? 'active' : ''
+                            resultFilter === 'D' ? 'active' : ''
                           }`}
                           onClick={() => showResult('D')}
                         >
@@ -144,7 +120,7 @@ function TheMatches() {
                       </div>
                     </div>
                   </div>
-                  <MatchesList matches={state.filterMatches} />
+                  <MatchesList matches={filterMatches ?? []} />
                 </div>
                 <div className="right">
                   <LeagueTable />

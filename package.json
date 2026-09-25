@@ -13,16 +13,16 @@
     "prepare": "simple-git-hooks install"
   },
   "dependencies": {
-    "@material-ui/core": "4.12.4",
-    "@material-ui/icons": "4.11.3",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^9.4.0",
     "d3-ease": "3.0.1",
-    "devalue": "^5.9.0",
+    "devalue": "^5.9.4",
     "firebase": "12.17.1",
     "formik": "2.4.9",
     "react": "^19.2.8",
-    "react-awesome-reveal": "3.7.0",
+    "react-awesome-reveal": "^4.3.1",
     "react-dom": "^19.2.8",
-    "react-firebase-file-uploader": "2.4.4",
     "react-helmet-async": "^3.0.0",
     "react-move": "6.5.0",
     "react-router-dom": "^7.18.2",
@@ -31,11 +31,10 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.3.0",
+    "@eslint-react/eslint-plugin": "^5.20.8",
     "@types/d3-ease": "3.0.2",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
-    "@typescript-eslint/eslint-plugin": "^8.66.0",
-    "@typescript-eslint/parser": "^8.66.0",
     "@vitejs/plugin-legacy": "^8.2.3",
     "@vitejs/plugin-react": "^6.0.5",
     "eslint": "^10.8.0",
@@ -44,21 +43,14 @@
     "lint-staged": "^17.3.0",
     "simple-git-hooks": "^2.13.1",
     "terser": "^5.49.2",
-    "typescript": "^7.0.2",
+    "typescript": "~5.9.3",
     "vite": "^8.2.1",
     "vite-plugin-beasties": "^0.4.3"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "react-awesome-reveal@3.7.0": "patches/react-awesome-reveal@3.7.0.patch"
-    }
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
-    "*.{js,ts,mjs,cjs,json,.*rc}": [
-      "npx eslint --fix"
-    ]
+    "*": "eslint --fix --no-warn-ignored"
   }
 }

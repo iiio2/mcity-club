@@ -1,7 +1,8 @@
 import { CityLogo } from '../../utils/tools'
 
+const year = new Date().getFullYear()
+
 function Footer() {
-  const date = new Date()
   return (
     <footer className="bck_blue">
       <div className="footer_logo">
@@ -10,7 +11,7 @@ function Footer() {
       <div className="footer_descl">
         Manchester City
         {' '}
-        {date.getFullYear()}
+        {year}
         . All Rights Reserved
       </div>
     </footer>

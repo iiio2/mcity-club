@@ -1,26 +1,28 @@
+import type { FormikProps } from 'formik'
+import type { Match, Team, WithId } from '../../../types'
 import {
   Button,
   FormControl,
   MenuItem,
   Select,
   TextField,
-} from '@material-ui/core'
+} from '@mui/material'
+import { addDoc, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore'
 import { useFormik } from 'formik'
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import AdminLayout from '../../../hoc/AdminLayout'
-import { matchesCollection, teamsCollection } from '../../../services/firebase'
+import { matchesCollection, teamsCollection, withIds } from '../../../services/firebase'
 import {
   selectErrorHelper,
   selectIsError,
-  showErrorToast,
-  showSuccessToast,
   textErrorHelper,
-} from '../../../utils/tools'
+} from '../../../utils/formHelpers'
+import { showErrorToast, showSuccessToast } from '../../../utils/toasts'
 
-const defaultValues = {
+const defaultValues: Match = {
   date: '',
   local: '',
   resultLocal: '',
@@ -32,144 +34,99 @@ const defaultValues = {
   final: '',
 }
 
-function MatchForm() {
+const scoreSchema = Yup.number()
+  .required('This input is required')
+  .min(0, 'The minimum is 0')
+  .max(99, 'The maximum is 99')
+
+const validationSchema = Yup.object({
+  date: Yup.string().required('This input is required'),
+  local: Yup.string().required('This input is required'),
+  resultLocal: scoreSchema,
+  away: Yup.string().required('This input is required'),
+  resultAway: scoreSchema,
+  referee: Yup.string().required('This input is required'),
+  stadium: Yup.string().required('This input is required'),
+  result: Yup.mixed()
+    .required('This input is required')
+    .oneOf(['W', 'D', 'L', 'n/a']),
+  final: Yup.mixed()
+    .required('This input is required')
+    .oneOf(['yes', 'no']),
+})
+
+function MatchForm({ matchid }: { matchid?: string }) {
   const [loading, setLoading] = useState(false)
-  const [formType, setFormType] = useState('')
-  const [teams, setTeams] = useState<any[] | null>(null)
-  const [values, setValues] = useState(defaultValues)
+  const [teams, setTeams] = useState<WithId<Team>[]>([])
+  const [values, setValues] = useState<Match>(defaultValues)
 
-  const { matchid } = useParams()
+  const isEdit = !!matchid
 
-  const formik = useFormik({
+  const formik: FormikProps<Match> = useFormik<Match>({
     enableReinitialize: true,
     initialValues: values,
-    validationSchema: Yup.object({
-      date: Yup.string().required('This input is required'),
-      local: Yup.string().required('This input is required'),
-      resultLocal: Yup.number()
-        .required('This input is required')
-        .min(0, 'The minimum is 0')
-        .max(99, 'The maximum is 30'),
-      away: Yup.string().required('This input is required'),
-      resultAway: Yup.number()
-        .required('This input is required')
-        .min(0, 'The minimum is 0')
-        .max(99, 'The maximum is 30'),
-      referee: Yup.string().required('This input is required'),
-      stadium: Yup.string().required('This input is required'),
-      result: Yup.mixed()
-        .required('This input is required')
-        .oneOf(['W', 'D', 'L', 'n/a']),
-      final: Yup.mixed()
-        .required('This input is required')
-        .oneOf(['yes', 'no']),
-    }),
+    validationSchema,
     onSubmit: (values) => {
-      submitForm(values)
+      const thumbOf = (shortName: string) =>
+        teams.find(team => team.shortName === shortName)?.thmb
+      const dataToSubmit: Match = {
+        ...values,
+        localThmb: thumbOf(values.local) ?? values.localThmb ?? '',
+        awayThmb: thumbOf(values.away) ?? values.awayThmb ?? '',
+      }
+
+      setLoading(true)
+      const request = matchid
+        ? updateDoc(doc(matchesCollection, matchid), { ...dataToSubmit })
+            .then(() => showSuccessToast('Match Updated'))
+        : addDoc(matchesCollection, dataToSubmit)
+            .then(() => {
+              showSuccessToast('Match added :)')
+              formik.resetForm()
+            })
+      request
+        .catch(showErrorToast)
+        .finally(() => setLoading(false))
     },
   })
 
   const showTeams = () =>
-    teams
-      ? teams.map(item => (
-          <MenuItem key={item.id} value={item.shortName}>
-            {item.shortName}
-          </MenuItem>
-        ))
-      : null
-
-  function submitForm(values: any) {
-    const dataToSubmit = values
-
-    teams
-    && teams.forEach((team) => {
-      if (team.shortName === dataToSubmit.local) {
-        dataToSubmit.localThmb = team.thmb
-      }
-      if (team.shortName === dataToSubmit.away) {
-        dataToSubmit.awayThmb = team.thmb
-      }
-    })
-
-    setLoading(true)
-    if (formType === 'add') {
-      matchesCollection
-        .add(dataToSubmit)
-        .then(() => {
-          showSuccessToast('Match added :)')
-          formik.resetForm()
-        })
-        .catch(() => {
-          showErrorToast('Sorry, something went wrong')
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-    else {
-      matchesCollection
-        .doc(matchid)
-        .update(dataToSubmit)
-        .then(() => {
-          showSuccessToast('Match Updated')
-        })
-        .catch(() => {
-          showErrorToast('Sorry, something went wrong')
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-  }
+    teams.map(item => (
+      <MenuItem key={item.id} value={item.shortName}>
+        {item.shortName}
+      </MenuItem>
+    ))
 
   useEffect(() => {
-    if (!teams) {
-      teamsCollection
-        .get()
-        .then((snapshot) => {
-          const teams = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-          setTeams(teams)
-        })
-        .catch((error) => {
-          showErrorToast(error)
-        })
-    }
-  }, [teams])
+    getDocs(teamsCollection)
+      .then(snapshot => setTeams(withIds(snapshot)))
+      .catch(showErrorToast)
+  }, [])
 
   useEffect(() => {
-    if (matchid) {
-      matchesCollection
-        .doc(matchid)
-        .get()
-        .then((snapshot) => {
-          if (snapshot.data()) {
-            setFormType('edit')
-            setValues(snapshot.data() as any)
-          }
-          else {
-            showErrorToast('No records found')
-          }
-        })
-    }
-    else {
-      setFormType('add')
-      setValues(defaultValues)
-    }
+    if (!matchid)
+      return
+
+    getDoc(doc(matchesCollection, matchid))
+      .then((snapshot) => {
+        const data = snapshot.data()
+        if (data)
+          setValues({ ...defaultValues, ...data, final: String(data.final ?? '').toLowerCase() })
+        else
+          showErrorToast('No records found')
+      })
+      .catch(showErrorToast)
   }, [matchid])
+
+  const title = isEdit ? 'Edit Match' : 'Add Match'
 
   return (
     <>
       <Helmet>
-        <title>
-          MCity Club -
-          {matchid ? 'Edit Match' : 'Add Match'}
-          <meta property="og:title" content={`${matchid ? 'Edit Match' : 'Add Match'}`} />
-        </title>
+        <title>{`MCity Club - ${title}`}</title>
+        <meta property="og:title" content={title} />
       </Helmet>
-      <AdminLayout title={formType === 'add' ? 'Add match' : 'Edit match'}>
+      <AdminLayout title={title}>
         <div className="editmatch_dialog_wrapper">
           <div>
             <form onSubmit={formik.handleSubmit}>
@@ -178,7 +135,6 @@ function MatchForm() {
                 <FormControl>
                   <TextField
                     id="date"
-                    // name="date"
                     type="date"
                     variant="outlined"
                     {...formik.getFieldProps('date')}
@@ -190,7 +146,7 @@ function MatchForm() {
               <hr />
 
               <div>
-                <h4>Result local</h4>
+                <h4>Local team and score</h4>
                 <FormControl error={selectIsError(formik, 'local')}>
                   <Select
                     id="local"
@@ -218,7 +174,7 @@ function MatchForm() {
               </div>
 
               <div>
-                <h4>Result away</h4>
+                <h4>Away team and score</h4>
                 <FormControl error={selectIsError(formik, 'away')}>
                   <Select
                     id="away"
@@ -287,7 +243,7 @@ function MatchForm() {
                       <MenuItem value="W">Win</MenuItem>
                       <MenuItem value="D">Draw</MenuItem>
                       <MenuItem value="L">Lose</MenuItem>
-                      <MenuItem value="n/a">Non available</MenuItem>
+                      <MenuItem value="n/a">Not available</MenuItem>
                     </Select>
                     {selectErrorHelper(formik, 'result')}
                   </FormControl>
@@ -317,7 +273,7 @@ function MatchForm() {
                   color="primary"
                   disabled={loading}
                 >
-                  {formType === 'add' ? 'Add match' : 'Edit match'}
+                  {title}
                 </Button>
               </div>
             </form>
@@ -328,4 +284,10 @@ function MatchForm() {
   )
 }
 
-export default MatchForm
+// Keyed on the route param so switching records starts from a clean form.
+function MatchFormPage() {
+  const { matchid } = useParams()
+  return <MatchForm key={matchid ?? 'new'} matchid={matchid} />
+}
+
+export default MatchFormPage

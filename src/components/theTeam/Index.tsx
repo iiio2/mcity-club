@@ -1,89 +1,59 @@
-import { CircularProgress } from '@material-ui/core'
+import type { Player, PlayerPosition, WithId } from '../../types'
+import { CircularProgress } from '@mui/material'
+import { getDocs } from 'firebase/firestore'
+import { getDownloadURL, ref } from 'firebase/storage'
 import { useEffect, useState } from 'react'
 import { Slide } from 'react-awesome-reveal'
 import { Helmet } from 'react-helmet-async'
-import { firebase, playersCollection } from '../../services/firebase'
+import { playersCollection, storage, withIds } from '../../services/firebase'
 import PlayerCard from '../../utils/playCard'
-import { showErrorToast } from '../../utils/tools'
+import { showErrorToast } from '../../utils/toasts'
 
-interface Player {
-  id: string
-  name: string
-  lastname: string
-  image: string
-  number: number
-  position: string
-  url: string
-}
+type PlayerWithUrl = WithId<Player> & { url: string }
 
 function TheTeam() {
   const [loading, setLoading] = useState(true)
-  const [players, setPlayers] = useState<Player[]>([])
+  const [players, setPlayers] = useState<PlayerWithUrl[]>([])
 
   useEffect(() => {
-    if (players.length === 0) {
-      playersCollection
-        .get()
-        .then((snapshot) => {
-          const playersData: any[] = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-
-          const fetchPlayerUrls = playersData.map(player =>
-            firebase
-              .storage()
-              .ref('players')
-              .child(player.image)
-              .getDownloadURL()
+    getDocs(playersCollection)
+      .then(snapshot =>
+        Promise.all(
+          withIds(snapshot).map(player =>
+            getDownloadURL(ref(storage, `players/${player.image}`))
               .then(url => ({ ...player, url }))
               .catch(() => null),
-          )
+          ),
+        ),
+      )
+      .then(playersWithUrls =>
+        setPlayers(playersWithUrls.filter(player => player !== null)),
+      )
+      .catch(() => showErrorToast('Sorry, try again later'))
+      .finally(() => setLoading(false))
+  }, [])
 
-          Promise.all(fetchPlayerUrls)
-            .then((playersWithUrls) => {
-              setPlayers(playersWithUrls.filter(Boolean) as Player[])
-            })
-            .catch(() => {
-              showErrorToast('Sorry, try again later')
-            })
-            .finally(() => {
-              setLoading(false)
-            })
-        })
-        .catch(() => {
-          showErrorToast('Sorry, try again later')
-        })
-    }
-  }, [players.length])
-
-  const showPlayerByCategory = (category: string) => {
-    if (players.length === 0)
-      return null
-
-    return players.map(player =>
-      player.position === category
-        ? (
-            <Slide left key={player.id} triggerOnce>
-              <div className="item">
-                <PlayerCard
-                  number={player.number}
-                  name={player.name}
-                  lastname={player.lastname}
-                  bck={player.url}
-                />
-              </div>
-            </Slide>
-          )
-        : null,
-    )
-  }
+  const showPlayerByCategory = (category: PlayerPosition) =>
+    players
+      .filter(player => player.position === category)
+      .map(player => (
+        <Slide direction="left" key={player.id} triggerOnce>
+          <div className="item">
+            <PlayerCard
+              number={player.number}
+              name={player.name}
+              lastname={player.lastname}
+              bck={player.url}
+            />
+          </div>
+        </Slide>
+      ))
 
   return (
     <>
       <Helmet>
         <title>MCity Club - Team</title>
-        <link property="og:title" content="Team" />
+        <meta property="og:title" content="Team" />
       </Helmet>
       <div className="the_team_container">
         {loading

@@ -1,100 +1,66 @@
-import { FormHelperText } from '@material-ui/core'
+import type { CSSProperties, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { toast } from 'react-toastify'
 import mcitylogo from '../resources/images/logos/manchester_city_logo.png'
-import { firebase } from '../services/firebase'
 
-export function CityLogo(props: any) {
+interface CityLogoProps {
+  width: string
+  height: string
+  link?: boolean
+  linkTo?: string
+}
+
+export function CityLogo({ width, height, link, linkTo = '/' }: CityLogoProps) {
   const template = (
     <div
       className="img_cover"
       style={{
-        width: props.width,
-        height: props.height,
+        width,
+        height,
         background: `url(${mcitylogo}) no-repeat`,
       }}
     >
     </div>
   )
 
-  if (props.link) {
+  if (link) {
     return (
-      <Link className="link_logo" to={props.linkTo}>
+      <Link className="link_logo" to={linkTo} aria-label="Home">
         {template}
       </Link>
     )
   }
-  else {
-    return template
-  }
+  return template
 }
 
-export function showSuccessToast(msg: string) {
-  toast.success(msg, {
-    position: toast.POSITION.TOP_LEFT,
-  })
+interface TagProps {
+  children: ReactNode
+  bck?: string
+  size?: string
+  color?: string
+  add?: CSSProperties
+  link?: boolean
+  linkTo?: string
 }
 
-export function showErrorToast(msg: string) {
-  toast.error(msg, {
-    position: toast.POSITION.TOP_LEFT,
-  })
-}
-
-export function Tag(props: any) {
+export function Tag({ children, bck = '#ffffff', size = '15px', color = '#000000', add, link, linkTo = '/' }: TagProps) {
   const template = (
     <div
       style={{
-        background: props.bck ? props.bck : '#ffffff',
-        fontSize: props.size ? props.size : '15px',
-        color: props.color ? props.color : '#000000',
+        background: bck,
+        fontSize: size,
+        color,
         padding: '5px 10px',
         display: 'inline-block',
         fontFamily: 'Righteous',
-        ...props.add,
+        ...add,
       }}
     >
-      {props.children}
+      {children}
     </div>
   )
 
-  if (props.link) {
-    return <Link to={props.linkTo}>{template}</Link>
+  if (link) {
+    return <Link to={linkTo}>{template}</Link>
   }
-  else {
-    return template
-  }
-}
-
-export function textErrorHelper(formik: any, values: any) {
-  return {
-    error: formik.errors[values] && formik.touched[values],
-    helperText:
-    formik.errors[values] && formik.touched[values]
-      ? formik.errors[values]
-      : null,
-  }
-}
-
-export function selectErrorHelper(formik: any, values: any) {
-  if (formik.errors[values] && formik.touched[values]) {
-    return <FormHelperText>{formik.errors[values]}</FormHelperText>
-  }
-  return false
-}
-
-export function selectIsError(formik: any, values: any) {
-  return formik.errors[values] && formik.touched[values]
-}
-
-export function logoutHandler() {
-  firebase
-    .auth()
-    .signOut()
-    .then(() => {
-      showSuccessToast('Goodbye!!')
-    })
-    .catch((error) => {
-      showErrorToast(error.message)
-    })
+  return template
 }

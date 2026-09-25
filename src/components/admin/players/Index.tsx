@@ -7,73 +7,15 @@ import {
   TableCell,
   TableHead,
   TableRow,
-} from '@material-ui/core'
-import { useEffect, useState } from 'react'
+} from '@mui/material'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import AdminLayout from '../../../hoc/AdminLayout'
 import { playersCollection } from '../../../services/firebase'
-import { showErrorToast } from '../../../utils/tools'
+import { usePaginatedCollection } from '../../../utils/usePaginatedCollection'
 
 function AdminPlayers() {
-  const [lastVisible, setLastVisible] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
-  const [players, setPlayers] = useState<any[] | null>(null)
-
-  useEffect(() => {
-    if (!players) {
-      setLoading(true)
-      playersCollection
-        .limit(2)
-        .get()
-        .then((snapshot) => {
-          const lastVisible = snapshot.docs[snapshot.docs.length - 1]
-          const players = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-          setLastVisible(lastVisible)
-          setPlayers(players)
-        })
-        .catch((error) => {
-          showErrorToast(error)
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-  }, [players])
-
-  const loadMorePlayers = () => {
-    if (lastVisible) {
-      setLoading(true)
-      playersCollection
-        .startAfter(lastVisible)
-        .limit(2)
-        .get()
-        .then((snapshot) => {
-          const lastVisible = snapshot.docs[snapshot.docs.length - 1]
-          const newPlayers = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-
-          setLastVisible(lastVisible)
-          if (players) {
-            setPlayers([...players, ...newPlayers])
-          }
-        })
-        .catch((error) => {
-          showErrorToast(error)
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-    else {
-      showErrorToast('nothing to load')
-    }
-  }
+  const { items: players, loading, hasMore, loadMore } = usePaginatedCollection(playersCollection, 2)
 
   return (
     <>
@@ -104,24 +46,22 @@ function AdminPlayers() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {players
-                ? players.map(player => (
-                    <TableRow key={player.id}>
-                      <TableCell>
-                        <Link to={`/admin_players/edit_player/${player.id}`}>
-                          {player.name}
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        <Link to={`/admin_players/edit_player/${player.id}`}>
-                          {player.lastname}
-                        </Link>
-                      </TableCell>
-                      <TableCell>{player.number}</TableCell>
-                      <TableCell>{player.position}</TableCell>
-                    </TableRow>
-                  ))
-                : null}
+              {players?.map(player => (
+                <TableRow key={player.id}>
+                  <TableCell>
+                    <Link to={`/admin_players/edit_player/${player.id}`}>
+                      {player.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link to={`/admin_players/edit_player/${player.id}`}>
+                      {player.lastname}
+                    </Link>
+                  </TableCell>
+                  <TableCell>{player.number}</TableCell>
+                  <TableCell>{player.position}</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </Paper>
@@ -129,10 +69,10 @@ function AdminPlayers() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => loadMorePlayers()}
-          disabled={loading}
+          onClick={loadMore}
+          disabled={loading || !hasMore}
         >
-          Load more
+          {hasMore ? 'Load more' : 'No more players'}
         </Button>
 
         <div className="admin_progress">

@@ -1,8 +1,11 @@
-import { AppBar, Button, Toolbar } from '@material-ui/core'
+import { AppBar, Button, Toolbar } from '@mui/material'
 import { Link } from 'react-router-dom'
-import { CityLogo, logoutHandler } from '../../utils/tools'
+import { logout, useAuth } from '../../services/auth'
+import { CityLogo } from '../../utils/tools'
 
-function Header({ user }: any) {
+function Header() {
+  const { user, isAdmin } = useAuth()
+
   return (
     <AppBar
       position="fixed"
@@ -20,24 +23,27 @@ function Header({ user }: any) {
           </div>
         </div>
 
-        <Link to="/the_matches">
-          <Button color="inherit">Matches</Button>
-        </Link>
+        <Button color="inherit" component={Link} to="/the_matches">
+          Matches
+        </Button>
 
-        <Link to="/the_team">
-          <Button color="inherit">The team</Button>
-        </Link>
+        <Button color="inherit" component={Link} to="/the_team">
+          The team
+        </Button>
+
+        {isAdmin
+          ? (
+              <Button color="inherit" component={Link} to="/dashboard">
+                Dashboard
+              </Button>
+            )
+          : null}
+
         {user
           ? (
-              <>
-                <Link to="/dashboard">
-                  <Button color="inherit">Dashboard</Button>
-                </Link>
-
-                <Button color="inherit" onClick={logoutHandler}>
-                  Log out
-                </Button>
-              </>
+              <Button color="inherit" onClick={logout}>
+                Log out
+              </Button>
             )
           : null}
       </Toolbar>

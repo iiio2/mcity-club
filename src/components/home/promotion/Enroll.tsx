@@ -1,10 +1,12 @@
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress } from '@mui/material'
+import { FirebaseError } from 'firebase/app'
+import { doc, setDoc } from 'firebase/firestore'
 import { useFormik } from 'formik'
 import { useState } from 'react'
 import { Fade } from 'react-awesome-reveal'
 import * as Yup from 'yup'
 import { promotionsCollection } from '../../../services/firebase'
-import { showErrorToast, showSuccessToast } from '../../../utils/tools'
+import { showErrorToast, showSuccessToast } from '../../../utils/toasts'
 
 function Enroll() {
   const [loading, setLoading] = useState(false)
@@ -13,34 +15,31 @@ function Enroll() {
     initialValues: { email: '' },
     validationSchema: Yup.object({
       email: Yup.string()
+        .trim()
         .email('Invalid email')
         .required('The email is required'),
     }),
     onSubmit: (values) => {
       setLoading(true)
-      submitForm(values)
+      submitForm(values.email.trim().toLowerCase())
+        .finally(() => setLoading(false))
     },
   })
 
-  async function submitForm(values: any) {
+  // The email is the document ID, and the rules only allow creating new
+  // documents. Visitors never need to read the list, so it stays private.
+  async function submitForm(email: string) {
     try {
-      const isOnTheList = await promotionsCollection
-        .where('email', '==', values.email)
-        .get()
-
-      if (isOnTheList.docs.length >= 1) {
-        showErrorToast('sorry you are on the list already')
-        setLoading(false)
-        return false
-      }
-      await promotionsCollection.add({ email: values.email })
+      await setDoc(doc(promotionsCollection, email), { email })
       formik.resetForm()
-      setLoading(false)
       showSuccessToast('Congratulation !!!:)')
     }
     catch (error) {
-      if (error instanceof Error)
-        showErrorToast(error.message)
+      // Writing an existing document counts as an update, which the rules deny.
+      if (error instanceof FirebaseError && error.code === 'permission-denied')
+        showErrorToast('sorry you are on the list already')
+      else
+        showErrorToast(error)
     }
   }
 
@@ -52,6 +51,8 @@ function Enroll() {
           <div className="enroll_input">
             <input
               name="email"
+              type="email"
+              autoComplete="email"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}

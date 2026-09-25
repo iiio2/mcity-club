@@ -1,10 +1,7 @@
+import type { ComponentType } from 'react'
+import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
-import Dashboard from './components/admin/Dashboard'
-import AdminMatches from './components/admin/matches/Index'
-import MatchForm from './components/admin/matches/MatchForm'
-import AdminPlayers from './components/admin/players/Index'
-import PlayerForm from './components/admin/players/PlayerForm'
 import Home from './components/home/Index'
 import Footer from './components/layouts/Footer'
 import Header from './components/layouts/Header'
@@ -13,81 +10,47 @@ import SignIn from './components/signIn/Index'
 import TheMatches from './components/theMatches/Index'
 import TheTeam from './components/theTeam/Index'
 import AuthGuard from './hoc/AuthGuard'
-import 'react-toastify/dist/ReactToastify.css'
 
-function App({ user }: any) {
+// The admin area is only for signed-in admins, so keep it out of the main bundle.
+const Dashboard = lazy(() => import('./components/admin/Dashboard'))
+const AdminMatches = lazy(() => import('./components/admin/matches/Index'))
+const MatchForm = lazy(() => import('./components/admin/matches/MatchForm'))
+const AdminPlayers = lazy(() => import('./components/admin/players/Index'))
+const PlayerForm = lazy(() => import('./components/admin/players/PlayerForm'))
+
+const adminRoutes: [path: string, Page: ComponentType][] = [
+  ['/dashboard', Dashboard],
+  ['/admin_matches', AdminMatches],
+  ['/admin_matches/add_match', MatchForm],
+  ['/admin_matches/edit_match/:matchid', MatchForm],
+  ['/admin_players', AdminPlayers],
+  ['/admin_players/add_player', PlayerForm],
+  ['/admin_players/edit_player/:playerid', PlayerForm],
+]
+
+function App() {
   return (
     <main>
       <ToastContainer />
-      <Header user={user} />
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/sign_in" element={<SignIn user={user} />} />
+        <Route path="/sign_in" element={<SignIn />} />
         <Route path="/the_matches" element={<TheMatches />} />
-        <Route
-          path="/the_team"
-          element={(
-            <AuthGuard>
-              <TheTeam />
-            </AuthGuard>
-          )}
-        />
-        <Route
-          path="/dashboard"
-          element={(
-            <AuthGuard>
-              <Dashboard />
-            </AuthGuard>
-          )}
-        />
-        <Route
-          path="/admin_matches"
-          element={(
-            <AuthGuard>
-              <AdminMatches />
-            </AuthGuard>
-          )}
-        />
-        <Route
-          path="/admin_matches/add_match"
-          element={(
-            <AuthGuard>
-              <MatchForm />
-            </AuthGuard>
-          )}
-        />
-        <Route
-          path="/admin_matches/edit_match/:matchid"
-          element={(
-            <AuthGuard>
-              <MatchForm />
-            </AuthGuard>
-          )}
-        />
-        <Route
-          path="/admin_players"
-          element={(
-            <AuthGuard>
-              <AdminPlayers />
-            </AuthGuard>
-          )}
-        />
-        <Route
-          path="/admin_players/add_player/"
-          element={(
-            <AuthGuard>
-              <PlayerForm />
-            </AuthGuard>
-          )}
-        />
-        <Route
-          path="/admin_players/edit_player/:playerid"
-          element={(
-            <AuthGuard>
-              <PlayerForm />
-            </AuthGuard>
-          )}
-        />
+        <Route path="/the_team" element={<TheTeam />} />
+        {adminRoutes.map(([path, Page]) => (
+          <Route
+            key={path}
+            path={path}
+            element={(
+              <AuthGuard>
+                <Suspense fallback={null}>
+                  <Page />
+                </Suspense>
+              </AuthGuard>
+            )}
+          />
+        ))}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

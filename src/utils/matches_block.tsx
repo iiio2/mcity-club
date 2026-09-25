@@ -1,4 +1,9 @@
-function MatchesBlock({ match }: any) {
+import type { Match } from '../types'
+import { isPlayed } from '../types'
+
+function MatchesBlock({ match }: { match: Match }) {
+  const played = isPlayed(match)
+
   return (
     <div className="match_block">
       <div className="match_date">{match.date}</div>
@@ -14,7 +19,7 @@ function MatchesBlock({ match }: any) {
             </div>
             <div className="team_name">{match.local}</div>
           </div>
-          <div className="right">{match.final ? match.resultLocal : '-'}</div>
+          <div className="right">{played ? match.resultLocal : '-'}</div>
         </div>
         <div className="match_bottom">
           <div className="left">
@@ -27,7 +32,7 @@ function MatchesBlock({ match }: any) {
             </div>
             <div className="team_name">{match.away}</div>
           </div>
-          <div className="right">{match.final ? match.resultAway : '-'}</div>
+          <div className="right">{played ? match.resultAway : '-'}</div>
         </div>
       </div>
     </div>

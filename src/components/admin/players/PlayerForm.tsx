@@ -1,27 +1,30 @@
+import type { FormikProps } from 'formik'
+import type { Player } from '../../../types'
 import {
   Button,
   FormControl,
   MenuItem,
   Select,
   TextField,
-} from '@material-ui/core'
+} from '@mui/material'
+import { addDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { getDownloadURL, ref } from 'firebase/storage'
 import { useFormik } from 'formik'
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useNavigate, useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import AdminLayout from '../../../hoc/AdminLayout'
-import { firebase, playersCollection } from '../../../services/firebase'
+import { playersCollection, storage } from '../../../services/firebase'
 import Fileuploader from '../../../utils/fileUploader'
 import {
   selectErrorHelper,
   selectIsError,
-  showErrorToast,
-  showSuccessToast,
   textErrorHelper,
-} from '../../../utils/tools'
+} from '../../../utils/formHelpers'
+import { showErrorToast, showSuccessToast } from '../../../utils/toasts'
 
-const defaultValues = {
+const defaultValues: Player = {
   name: '',
   lastname: '',
   number: '',
@@ -29,100 +32,68 @@ const defaultValues = {
   image: '',
 }
 
-function PlayerForm() {
+const validationSchema = Yup.object({
+  name: Yup.string().required('This input is required'),
+  lastname: Yup.string().required('This input is required'),
+  number: Yup.number()
+    .required('This input is required')
+    .min(0, 'The minimum is 0')
+    .max(100, 'The max is 100'),
+  position: Yup.string().required('This input is required'),
+  image: Yup.string().required('This input is required'),
+})
+
+function PlayerForm({ playerid }: { playerid?: string }) {
   const [loading, setLoading] = useState(false)
-  const [formType, setFormType] = useState('')
-  const [values, setValues] = useState(defaultValues)
+  const [values, setValues] = useState<Player>(defaultValues)
   const [defaultImg, setDefaultImg] = useState('')
 
-  const { playerid } = useParams()
   const navigate = useNavigate()
+  const isEdit = !!playerid
 
-  const formik = useFormik({
+  const formik: FormikProps<Player> = useFormik<Player>({
     enableReinitialize: true,
     initialValues: values,
-    validationSchema: Yup.object({
-      name: Yup.string().required('This input is required'),
-      lastname: Yup.string().required('This input is required'),
-      number: Yup.number()
-        .required('This input is required')
-        .min(0, 'The minimum is cero')
-        .max(100, 'The max is 100'),
-      position: Yup.string().required('This input is required'),
-      image: Yup.string().required('This input is required'),
-    }),
+    validationSchema,
     onSubmit: (values) => {
-      submitForm(values)
+      setLoading(true)
+      const request = playerid
+        ? updateDoc(doc(playersCollection, playerid), { ...values })
+            .then(() => showSuccessToast('Player updated'))
+        : addDoc(playersCollection, values)
+            .then(() => {
+              showSuccessToast('Player added')
+              formik.resetForm()
+              navigate('/admin_players')
+            })
+      request
+        .catch(showErrorToast)
+        .finally(() => setLoading(false))
     },
   })
 
-  function submitForm(values: any) {
-    const dataToSubmit = values
-    setLoading(true)
-
-    if (formType === 'add') {
-      playersCollection
-        .add(dataToSubmit)
-        .then(() => {
-          showSuccessToast('Player added')
-          formik.resetForm()
-          navigate('/admin_players')
-        })
-        .catch((error) => {
-          showErrorToast(error)
-        })
-    }
-    else {
-      playersCollection
-        .doc(playerid)
-        .update(dataToSubmit)
-        .then(() => {
-          showSuccessToast('Player updated')
-        })
-        .catch((error) => {
-          showErrorToast(error)
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-  }
-
   useEffect(() => {
-    if (playerid) {
-      playersCollection
-        .doc(playerid)
-        .get()
-        .then((snapshot) => {
-          if (snapshot.data()) {
-            firebase
-              .storage()
-              .ref('players')
-              .child(snapshot.data()?.image)
-              .getDownloadURL()
-              .then((url) => {
-                updateImageName(snapshot.data()?.image)
-                setDefaultImg(url)
-              })
+    if (!playerid)
+      return
 
-            setFormType('edit')
-            setValues(snapshot.data() as any)
-          }
-          else {
-            showErrorToast('Sorry, nothing was found')
-          }
-        })
-        .catch((error) => {
-          showErrorToast(error)
-        })
-    }
-    else {
-      setFormType('add')
-      setValues(defaultValues)
-    }
+    getDoc(doc(playersCollection, playerid))
+      .then((snapshot) => {
+        const data = snapshot.data()
+        if (!data) {
+          showErrorToast('Sorry, nothing was found')
+          return
+        }
+        setValues({ ...defaultValues, ...data })
+        if (data.image) {
+          getDownloadURL(ref(storage, `players/${data.image}`))
+            .then(setDefaultImg)
+            .catch(showErrorToast)
+        }
+      })
+      .catch(showErrorToast)
   }, [playerid])
 
-  function updateImageName(filename: string) {
+  const updateImageName = (filename: string) => {
     formik.setFieldValue('image', filename)
   }
 
@@ -131,16 +102,15 @@ function PlayerForm() {
     setDefaultImg('')
   }
 
+  const title = isEdit ? 'Edit Player' : 'Add Player'
+
   return (
     <>
       <Helmet>
-        <title>
-          MCity Club -
-          {playerid ? 'Edit Player' : 'Add Player'}
-        </title>
-        <meta property="og:title" content="Add Player" />
+        <title>{`MCity Club - ${title}`}</title>
+        <meta property="og:title" content={title} />
       </Helmet>
-      <AdminLayout title={formType === 'add' ? 'Add player' : 'Edit player'}>
+      <AdminLayout title={title}>
         <div className="editplayers_dialog_wrapper">
           <div>
             <form onSubmit={formik.handleSubmit}>
@@ -149,8 +119,8 @@ function PlayerForm() {
                   dir="players"
                   defaultImg={defaultImg}
                   defaultImgName={formik.values.image}
-                  filename={filename => updateImageName(filename)}
-                  resetImage={() => resetImage()}
+                  filename={updateImageName}
+                  resetImage={resetImage}
                 />
                 {selectErrorHelper(formik, 'image')}
               </FormControl>
@@ -220,7 +190,7 @@ function PlayerForm() {
                 color="primary"
                 disabled={loading}
               >
-                {formType === 'add' ? 'Add player' : 'Edit player'}
+                {title}
               </Button>
             </form>
           </div>
@@ -230,4 +200,10 @@ function PlayerForm() {
   )
 }
 
-export default PlayerForm
+// Keyed on the route param so switching records starts from a clean form.
+function PlayerFormPage() {
+  const { playerid } = useParams()
+  return <PlayerForm key={playerid ?? 'new'} playerid={playerid} />
+}
+
+export default PlayerFormPage

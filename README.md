@@ -15,6 +15,29 @@ pnpm i
 cp .env.example .env
 ```
 
+Paste your Firebase web app config into `VITE_FIREBASE_CONFIG` as one line of JSON.
+
+### Admin access
+
+The admin area (`/dashboard` and the `/admin_*` pages) is open only to users with a document at `admins/{uid}` in Firestore. To make someone an admin, create a user under Authentication in the Firebase console, copy their UID, and add an empty document with that ID to the `admins` collection. Signing in alone is not enough.
+
+### Security rules
+
+[firestore.rules](firestore.rules) and [storage.rules](storage.rules) enforce the same admin check on the server. Deploy them with:
+
+```bash
+npx firebase-tools deploy --only firestore:rules,storage --project <your-project-id>
+```
+
+### Local emulators
+
+To work without touching a real project (requires Java), start the emulators and point the app at them:
+
+```bash
+npx firebase-tools emulators:start --project demo-mcity --only auth,firestore,storage
+VITE_FIREBASE_EMULATORS=true pnpm dev
+```
+
 ## Scripts
 
 | Command | Description |

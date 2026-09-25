@@ -11,8 +11,8 @@ function Matches() {
 
         <Blocks />
 
-        <Tag size="22px" color="#0e1731" link={true} linkTo="/the_team">
-          Matches
+        <Tag size="22px" color="#0e1731" link={true} linkTo="/the_matches">
+          See more matches
         </Tag>
       </div>
     </div>

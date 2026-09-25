@@ -1,9 +1,21 @@
 allowBuilds:
-  '@firebase/util': set this to true or false
-  core-js: set this to true or false
-  esbuild: set this to true or false
-  protobufjs: set this to true or false
-  simple-git-hooks: set this to true or false
+  # Only writes a Firebase auto-init config from env vars; unused here.
+  '@firebase/util': false
+  # Prints a donation banner.
+  core-js: false
+  # Platform binaries come from optionalDependencies; the script only verifies them.
+  esbuild: false
+  # Version check only.
+  protobufjs: false
+  simple-git-hooks: true
 minimumReleaseAgeExclude:
   - '@vitejs/plugin-legacy@8.2.3'
   - vite@8.2.1
+shellEmulator: true
+
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  # The 2023 ReDoS backport (CVE-2022-25883) was published by a different npm
+  # maintainer than 6.3.0, which the trust policy reads as a downgrade.
+  # Pulled in by @babel/core.
+  - semver@6.3.1

@@ -1,31 +1,29 @@
+import type { Match, WithId } from '../../types'
 import { easePolyOut } from 'd3-ease'
-import NodeGroup from 'react-move/NodeGroup'
+import { NodeGroup } from 'react-move'
 
-function MatchesList(props: any) {
+function MatchesList({ matches }: { matches: WithId<Match>[] }) {
   const showMatches = () =>
-    props.matches
+    matches
       ? (
           <NodeGroup
-            data={props.matches}
+            data={matches}
             keyAccessor={d => d.id}
             start={() => ({
               opacity: 0,
               x: -200,
             })}
-            enter={(d, i) => ({
-              key: d,
+            enter={(_d, i) => ({
               opacity: [1],
               x: [0],
               timing: { duration: 500, delay: i * 50, ease: easePolyOut },
             })}
-            update={(d, i) => ({
-              key: d,
+            update={(_d, i) => ({
               opacity: [1],
               x: [0],
               timing: { duration: 500, delay: i * 50, ease: easePolyOut },
             })}
-            leave={(d, i) => ({
-              key: d,
+            leave={(_d, i) => ({
               opacity: [0],
               x: [-200],
               timing: { duration: 500, delay: i * 50, ease: easePolyOut },
@@ -69,14 +67,17 @@ function MatchesList(props: any) {
                     <div className="block_wraper nfo">
                       <div>
                         <strong>Date:</strong>
+                        {' '}
                         {data.date}
                       </div>
                       <div>
                         <strong>Stadium:</strong>
+                        {' '}
                         {data.stadium}
                       </div>
                       <div>
                         <strong>Referee:</strong>
+                        {' '}
                         {data.referee}
                       </div>
                     </div>

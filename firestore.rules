@@ -1,0 +1,45 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Admin access is granted by creating admins/{uid} by hand in the console.
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    match /admins/{uid} {
+      // Users may only check their own entry; nobody can grant themselves access.
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Public site content, managed from the admin area.
+    match /matches/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /players/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /positions/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /teams/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Newsletter sign-ups. The document ID is the lower-cased email, so a
+    // duplicate is a denied update and visitors never need to read the list.
+    match /promotions/{email} {
+      allow create: if request.resource.data.keys().hasOnly(['email'])
+        && request.resource.data.email == email
+        && email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+      allow read, delete: if isAdmin();
+      allow update: if false;
+    }
+  }
+}

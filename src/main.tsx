@@ -1,21 +1,19 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
 import { HelmetProvider } from 'react-helmet-async'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App.tsx'
-import { firebase } from './services/firebase.ts'
+import AuthProvider from './hoc/AuthProvider.tsx'
 import './resources/css/app.css'
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-
-firebase.auth().onAuthStateChanged((user) => {
-  root.render(
-    <React.StrictMode>
-      <HelmetProvider>
+createRoot(document.getElementById('root') as HTMLElement).render(
+  <StrictMode>
+    <HelmetProvider>
+      <AuthProvider>
         <BrowserRouter>
-          <App user={user} />
+          <App />
         </BrowserRouter>
-      </HelmetProvider>
-    </React.StrictMode>,
-  )
-})
+      </AuthProvider>
+    </HelmetProvider>
+  </StrictMode>,
+)

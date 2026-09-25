@@ -717,3 +717,19 @@ footer .footer_discl {
   justify-content: center;
   align-items: center;
 }
+
+.image_upload_container .remove {
+  cursor: pointer;
+  font: inherit;
+}
+
+.not_found_container .no_access_logout {
+  margin-top: 30px;
+  padding: 10px 20px;
+  border: none;
+  background: #98c5e9;
+  color: #ffffff;
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  cursor: pointer;
+}

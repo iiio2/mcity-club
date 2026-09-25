@@ -22,7 +22,6 @@ USER mcity
 # simple-git-hooks, which installs git hooks that are useless in a container.
 # The source itself is bind-mounted at runtime, so it is not copied here.
 COPY --chown=mcity:mcity package.json pnpm-workspace.yaml pnpm-lock.yaml ./
-COPY --chown=mcity:mcity patches ./patches
 
 RUN pnpm i --frozen-lockfile --ignore-scripts
 

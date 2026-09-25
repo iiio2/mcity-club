@@ -7,73 +7,16 @@ import {
   TableCell,
   TableHead,
   TableRow,
-} from '@material-ui/core'
-import { useEffect, useState } from 'react'
+} from '@mui/material'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import AdminLayout from '../../../hoc/AdminLayout'
 import { matchesCollection } from '../../../services/firebase'
-import { showErrorToast } from '../../../utils/tools'
+import { isPlayed } from '../../../types'
+import { usePaginatedCollection } from '../../../utils/usePaginatedCollection'
 
 function AdminMatches() {
-  const [lastVisible, setLastVisible] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
-  const [matches, setMatches] = useState<any[] | null>(null)
-
-  useEffect(() => {
-    if (!matches) {
-      setLoading(true)
-      matchesCollection
-        .limit(2)
-        .get()
-        .then((snapshot) => {
-          const lastVisible = snapshot.docs[snapshot.docs.length - 1]
-          const matches = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-          setLastVisible(lastVisible)
-          setMatches(matches)
-        })
-        .catch((error) => {
-          showErrorToast(error)
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-  }, [matches])
-
-  const loadMoreMatches = () => {
-    if (lastVisible) {
-      setLoading(true)
-      matchesCollection
-        .startAfter(lastVisible)
-        .limit(2)
-        .get()
-        .then((snapshot) => {
-          const lastVisible = snapshot.docs[snapshot.docs.length - 1]
-          const newMatches = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-
-          setLastVisible(lastVisible)
-          if (matches) {
-            setMatches([...matches, ...newMatches])
-          }
-        })
-        .catch((error) => {
-          showErrorToast(error)
-        })
-        .finally(() => {
-          setLoading(false)
-        })
-    }
-    else {
-      showErrorToast('nothing to load')
-    }
-  }
+  const { items: matches, loading, hasMore, loadMore } = usePaginatedCollection(matchesCollection, 2)
 
   return (
     <>
@@ -104,40 +47,38 @@ function AdminMatches() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {matches
-                ? matches.map(match => (
-                    <TableRow key={match.id}>
-                      <TableCell>{match.date}</TableCell>
-                      <TableCell>
-                        <Link to={`/admin_matches/edit_match/${match.id}`}>
-                          {match.away}
-                          {' '}
-                          <strong>-</strong>
-                          {' '}
-                          {match.local}
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        {match.resultAway}
-                        {' '}
-                        <strong>-</strong>
-                        {' '}
-                        {match.resultLocal}
-                      </TableCell>
-                      <TableCell>
-                        {match.final === 'Yes'
-                          ? (
-                              <span className="matches_tag_red">Final</span>
-                            )
-                          : (
-                              <span className="matches_tag_green">
-                                Not played yet
-                              </span>
-                            )}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                : null}
+              {matches?.map(match => (
+                <TableRow key={match.id}>
+                  <TableCell>{match.date}</TableCell>
+                  <TableCell>
+                    <Link to={`/admin_matches/edit_match/${match.id}`}>
+                      {match.local}
+                      {' '}
+                      <strong>-</strong>
+                      {' '}
+                      {match.away}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    {match.resultLocal}
+                    {' '}
+                    <strong>-</strong>
+                    {' '}
+                    {match.resultAway}
+                  </TableCell>
+                  <TableCell>
+                    {isPlayed(match)
+                      ? (
+                          <span className="matches_tag_red">Final</span>
+                        )
+                      : (
+                          <span className="matches_tag_green">
+                            Not played yet
+                          </span>
+                        )}
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </Paper>
@@ -145,10 +86,10 @@ function AdminMatches() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => loadMoreMatches()}
-          disabled={loading}
+          onClick={loadMore}
+          disabled={loading || !hasMore}
         >
-          Load more
+          {hasMore ? 'Load more' : 'No more matches'}
         </Button>
 
         <div className="admin_progress">
