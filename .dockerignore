@@ -13,7 +13,6 @@ dist-ssr
 .env
 .env.*
 .git
-.eslintcache
 
 # Editor directories and files
 .vscode/*

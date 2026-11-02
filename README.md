@@ -45,7 +45,7 @@ VITE_FIREBASE_EMULATORS=true pnpm dev
 | `pnpm dev` | Start the dev server on [localhost:5000](http://localhost:5000) |
 | `pnpm build` | Type-check and build to `dist/` |
 | `pnpm preview` | Serve the production build locally |
-| `pnpm lint` | Lint with ESLint |
+| `pnpm lint` | Lint with oxlint |
 | `pnpm lint:fix` | Lint and auto-fix |
 
 ## Docker

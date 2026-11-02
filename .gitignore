@@ -12,7 +12,6 @@ dist
 dist-ssr
 .env
 !.env.example
-.eslintcache
 
 # Editor directories and files
 .vscode/*
